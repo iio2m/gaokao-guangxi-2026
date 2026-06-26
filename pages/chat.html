@@ -267,6 +267,7 @@
   var isStreaming = false;
 
   // ==================== Profile ====================
+  var _profileVersion = 0;
   function getProfile() {
     try { return JSON.parse(localStorage.getItem('gx_student_profile')); } catch(e) { return null; }
   }
@@ -280,8 +281,23 @@
     var rank = p && p.rank ? p.rank.toLocaleString() : '?';
     var place = p ? (p.birthPlace || '广西') : '?';
     el.innerHTML = '<span style="font-weight:600;color:var(--primary);white-space:nowrap;"><i class="fa-solid fa-id-card"></i> ' + score + '分 | ' + rank + '名 | ' + place + '</span>' +
-      '<span style="white-space:nowrap;color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + ';font-weight:bold">' + (hasKey ? '🟢 AI在线' : '🟡 离线') + '</span>';
+      '<span style="white-space:nowrap;color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + ';font-weight:bold">' + (hasKey ? '🟢 AI在线' : '🟡 离线') + '</span>' +
+      '<span style="font-size:10px;color:var(--text-muted);cursor:pointer" onclick="updateProfileFloat();showToast(\'已刷新考生信息\',\'info\')" title="点击刷新">🔄</span>';
   }
+
+  // Listen for localStorage changes from other tabs (e.g., index.html)
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'gx_student_profile') {
+      updateProfileFloat();
+      _profileVersion++;
+      showToast('检测到信息更新，已同步（版本' + _profileVersion + '）', 'info');
+    }
+  });
+
+  // Also refresh when page becomes visible (user switches back from index.html)
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) updateProfileFloat();
+  });
 
   // ==================== Role Switching ====================
   function switchActiveRole(roleId) {
@@ -423,11 +439,15 @@
     var content = input.value.trim();
     if (!content) return;
 
+    // Always read fresh from localStorage (not cached)
     var profile = getProfile();
     if (!profile) {
       showToast('请先在首页填写考生信息', 'warning');
       return;
     }
+
+    // Refresh the display card to show current data
+    updateProfileFloat();
 
     input.value = '';
     input.style.height = 'auto';
