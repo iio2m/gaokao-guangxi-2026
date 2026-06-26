@@ -81,6 +81,7 @@
       <div class="card-header">
         <span class="card-title"><i class="fa-solid fa-id-card"></i> 考生信息摘要</span>
         <button class="btn btn-sm btn-outline" onclick="recalculate()"><i class="fa-solid fa-rotate"></i> 重新计算</button>
+        <button class="btn btn-sm btn-outline" onclick="showAllSchoolsChart()"><i class="fa-solid fa-chart-column"></i> 位次对比图</button>
       </div>
       <div class="card-body">
         <div class="profile-summary" id="profileSummary"></div>
@@ -155,7 +156,7 @@
   <script src="../src/agent/role-manager.js"></script>
   <script src="../src/api/data-fetcher.js"></script>
   <script src="../src/api/network-status.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../src/view/rank-chart.js"></script>`n  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <script>
   // ==================== Toast ====================
@@ -365,6 +366,9 @@
 
     volunteerResults = results;
 
+    // Auto-show comparison chart after render (delayed to allow DOM update)
+    setTimeout(function() { showAllSchoolsChart(); }, 500);
+
     // Slip probability badge
     var slip = results.summary.slipProbability;
     var badgeEl = document.getElementById('slipBadge');
@@ -435,6 +439,24 @@
   }
 
   // ==================== Chart ====================
+  function showAllSchoolsChart() {
+    if (!volunteerResults) return;
+    var allSchools = [];
+    ['冲刺', '稳妥', '保底'].forEach(function(t) {
+      (volunteerResults[t] || []).forEach(function(s) { allSchools.push(s); });
+    });
+    if (allSchools.length === 0) return;
+
+    var box = document.getElementById('chartBox');
+    box.classList.add('show');
+    document.getElementById('chartTitle').textContent = '全部推荐院校近三年投档位次对比';
+
+    var studentRank = (volunteerResults.summary || {}).studentRank || 0;
+    if (window.RankChart && window.RankChart.renderRankChart) {
+      window.RankChart.renderRankChart('rankChartCanvas', allSchools, studentRank);
+    }
+  }
+
   function showSchoolChart(schoolName, idx, tierKey) {
     if (!volunteerResults) return;
     var school = (volunteerResults[tierKey] || [])[idx];
@@ -444,35 +466,33 @@
     box.classList.add('show');
     document.getElementById('chartTitle').textContent = school.name + ' - 近三年位次波动';
 
-    var years = ['2023', '2024', '2025', '2026(预测)'];
-    var ranks = (school.historyRanks || []).slice(-3);
-    if (ranks.length < 3) {
-      while (ranks.length < 3) ranks.push(school.avgRank);
-    }
-    ranks.push(school.avgRank);
+    var years = ['2023', '2024', '2025'];
+    var ranks = (school.historyRanks || []).slice(0, 3);
+    while (ranks.length < 3) ranks.push(school.avgRank);
 
     var studentRank = (volunteerResults.summary || {}).studentRank || 0;
 
+    // Destroy previous
+    if (typeof Chart === 'undefined') return;
     var ctx = document.getElementById('rankChartCanvas').getContext('2d');
     if (chartInstance) chartInstance.destroy();
 
     chartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: years.slice(0, ranks.length),
-        datasets: [
-          {
-            label: '录取位次',
-            data: ranks.map(function(r) { return r; }),
-            backgroundColor: ranks.map(function(r) {
-              return r <= studentRank ? 'rgba(46, 204, 113, 0.6)' : 'rgba(231, 76, 60, 0.6)';
-            }),
-            borderColor: ranks.map(function(r) {
-              return r <= studentRank ? '#2ECC71' : '#E74C3C';
-            }),
-            borderWidth: 1
-          }
-        ]
+        labels: years,
+        datasets: [{
+          label: '投档位次',
+          data: ranks,
+          backgroundColor: ranks.map(function(r) {
+            return r <= studentRank ? 'rgba(56,142,60,0.6)' : 'rgba(211,47,47,0.6)';
+          }),
+          borderColor: ranks.map(function(r) {
+            return r <= studentRank ? '#388e3c' : '#d32f2f';
+          }),
+          borderWidth: 2,
+          borderRadius: 4
+        }]
       },
       options: {
         responsive: true,
@@ -481,7 +501,44 @@
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: function(ctx) { return '位次: ' + ctx.raw.toLocaleString(); }
+              label: function(ctx) {
+                var diff = ctx.raw - studentRank;
+                var note = diff < 0 ? '(领先你' + Math.abs(diff).toLocaleString() + '名)' : '(落后你' + diff.toLocaleString() + '名)';
+                return '位次: ' + ctx.raw.toLocaleString() + ' ' + note;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            reverse: true,
+            title: { display: true, text: '省位次' },
+            ticks: { callback: function(v) { return v.toLocaleString(); } }
+          }
+        }
+      },
+      plugins: [{
+        id: 'studentLine',
+        afterDraw: function(chart) {
+          var ctx = chart.ctx;
+          var y = chart.scales.y.getPixelForValue(studentRank);
+          ctx.save();
+          ctx.setLineDash([5, 5]);
+          ctx.strokeStyle = '#ff6d00';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(chart.scales.x.left, y);
+          ctx.lineTo(chart.scales.x.right, y);
+          ctx.stroke();
+          ctx.fillStyle = '#ff6d00';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.textAlign = 'left';
+          ctx.fillText('你的位次', chart.scales.x.left + 4, y - 5);
+          ctx.restore();
+        }
+      }]
+    });
+  }
             }
           },
           annotation: studentRank > 0 ? {
@@ -642,3 +699,4 @@
   </script>
 </body>
 </html>
+

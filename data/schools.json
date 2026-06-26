@@ -5126,5 +5126,1854 @@
       "成本低"
     ],
     "source": "广西招生考试院公开数据估算"
+  },
+  {
+    "id": "985-001",
+    "name": "中山大学",
+    "province": "广东",
+    "city": "广州",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6000,
+    "majors": [
+      {
+        "name": "电子信息科学与技术",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": true,
+        "employment": "华为、中兴、珠三角IT企业"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "腾讯、互联网大厂"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州智能制造、珠三角企业"
+      }
+    ],
+    "historyRanks": [2200, 2150, 2100],
+    "historyScores": [638, 642, 645],
+    "avgRank": 2150,
+    "tags": ["985", "华南第一", "珠三角"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-002",
+    "name": "华南理工大学",
+    "province": "广东",
+    "city": "广州",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6000,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "南方电网、电力设计院"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "制造业自动化、珠三角电子企业"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": true,
+        "employment": "华为、大疆"
+      }
+    ],
+    "historyRanks": [3200, 3100, 3050],
+    "historyScores": [625, 628, 630],
+    "avgRank": 3117,
+    "tags": ["985", "工科强校", "珠三角"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-003",
+    "name": "哈尔滨工业大学",
+    "province": "黑龙江",
+    "city": "哈尔滨",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "航天科技、军工企业"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "航空航天制造、军工科研院所"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "互联网大厂"
+      }
+    ],
+    "historyRanks": [3500, 3400, 3350],
+    "historyScores": [620, 624, 627],
+    "avgRank": 3417,
+    "tags": ["985", "C9联盟", "航天强校"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-004",
+    "name": "华中科技大学",
+    "province": "湖北",
+    "city": "武汉",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5850,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "国家电网、南方电网"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "武汉光谷制造业"
+      },
+      {
+        "name": "光电信息科学与工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": true,
+        "employment": "武汉光谷、光电企业"
+      }
+    ],
+    "historyRanks": [3800, 3650, 3550],
+    "historyScores": [617, 620, 623],
+    "avgRank": 3667,
+    "tags": ["985", "工科强校", "光谷"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-005",
+    "name": "武汉大学",
+    "province": "湖北",
+    "city": "武汉",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5850,
+    "majors": [
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": true,
+        "employment": "华为、中兴、光谷企业"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "互联网大厂"
+      },
+      {
+        "name": "测绘工程",
+        "category": "测绘类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "测绘院、GIS企业"
+      }
+    ],
+    "historyRanks": [3800, 3650, 3550],
+    "historyScores": [617, 620, 623],
+    "avgRank": 3667,
+    "tags": ["985", "综合名校", "樱花之校"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-006",
+    "name": "电子科技大学",
+    "province": "四川",
+    "city": "成都",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": true,
+        "employment": "华为、中兴、通信企业"
+      },
+      {
+        "name": "通信工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": true,
+        "employment": "华为、中国移动、电信"
+      },
+      {
+        "name": "微电子科学与工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": true,
+        "employment": "芯片设计企业"
+      }
+    ],
+    "historyRanks": [4500, 4300, 4200],
+    "historyScores": [610, 614, 617],
+    "avgRank": 4333,
+    "tags": ["985", "电子信息黄埔", "成都"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-007",
+    "name": "中南大学",
+    "province": "湖南",
+    "city": "长沙",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5800,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "长沙智能制造企业"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "三一重工、中联重科"
+      },
+      {
+        "name": "材料科学与工程",
+        "category": "材料类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "新材料企业、科研院所"
+      }
+    ],
+    "historyRanks": [5500, 5300, 5150],
+    "historyScores": [605, 608, 612],
+    "avgRank": 5317,
+    "tags": ["985", "湘雅医学", "工科强校"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-008",
+    "name": "四川大学",
+    "province": "四川",
+    "city": "成都",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "成都IT、互联网企业"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "成都电子企业"
+      },
+      {
+        "name": "高分子材料与工程",
+        "category": "材料类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "化工材料企业"
+      }
+    ],
+    "historyRanks": [5500, 5300, 5150],
+    "historyScores": [605, 608, 612],
+    "avgRank": 5317,
+    "tags": ["985", "综合强校", "成都"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-009",
+    "name": "西北工业大学",
+    "province": "陕西",
+    "city": "西安",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "飞行器设计与工程",
+        "category": "航空航天类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": false,
+        "employment": "中航工业、航天科技"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "军工企业、西安制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "西安IT、军工信息化"
+      }
+    ],
+    "historyRanks": [6800, 6500, 6300],
+    "historyScores": [597, 602, 607],
+    "avgRank": 6533,
+    "tags": ["985", "国防七子", "三航特色"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-010",
+    "name": "湖南大学",
+    "province": "湖南",
+    "city": "长沙",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5800,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "湖南电网、南方电网"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "中联重科、三一重工"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "长沙电子企业"
+      }
+    ],
+    "historyRanks": [6800, 6500, 6300],
+    "historyScores": [597, 602, 607],
+    "avgRank": 6533,
+    "tags": ["985", "千年学府", "电气强校"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-011",
+    "name": "重庆大学",
+    "province": "重庆",
+    "city": "重庆",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "重庆电网、西南电力设计院"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "重庆汽车制造、长安集团"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "重庆智能制造"
+      }
+    ],
+    "historyRanks": [7500, 7200, 7000],
+    "historyScores": [593, 597, 602],
+    "avgRank": 7233,
+    "tags": ["985", "建筑老八校", "山城"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-012",
+    "name": "山东大学",
+    "province": "山东",
+    "city": "济南",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5800,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "山东电网、国网"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "济南智能制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "济南IT"
+      }
+    ],
+    "historyRanks": [8500, 8200, 8000],
+    "historyScores": [582, 587, 592],
+    "avgRank": 8233,
+    "tags": ["985", "齐鲁名校", "综合强校"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-013",
+    "name": "大连理工大学",
+    "province": "辽宁",
+    "city": "大连",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "大连重工、东北制造"
+      },
+      {
+        "name": "化学工程与工艺",
+        "category": "化工类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "中石油、中石化"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "大连制造企业"
+      }
+    ],
+    "historyRanks": [9000, 8700, 8400],
+    "historyScores": [580, 584, 588],
+    "avgRank": 8700,
+    "tags": ["985", "化工强校", "沿海"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-014",
+    "name": "吉林大学",
+    "province": "吉林",
+    "city": "长春",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5200,
+    "majors": [
+      {
+        "name": "车辆工程",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "一汽集团、汽车制造"
+      },
+      {
+        "name": "机械工程",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "长春制造企业"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "长春IT"
+      }
+    ],
+    "historyRanks": [11000, 10500, 10200],
+    "historyScores": [572, 577, 580],
+    "avgRank": 10567,
+    "tags": ["985", "车辆工程", "东北名校"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-015",
+    "name": "东北大学",
+    "province": "辽宁",
+    "city": "沈阳",
+    "level": "985/211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "沈阳自动化所、制造企业"
+      },
+      {
+        "name": "机械工程",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "沈阳机床、东北制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "沈阳IT、东软"
+      }
+    ],
+    "historyRanks": [13000, 12500, 12200],
+    "historyScores": [560, 565, 568],
+    "avgRank": 12567,
+    "tags": ["985", "自动化强校", "东北"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-016",
+    "name": "中国海洋大学",
+    "province": "山东",
+    "city": "青岛",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5800,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "青岛IT"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "青岛电子企业"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "青岛制造"
+      }
+    ],
+    "historyRanks": [13000, 12500, 12200],
+    "historyScores": [560, 565, 568],
+    "avgRank": 12567,
+    "tags": ["985", "海洋科学", "青岛"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "985-017",
+    "name": "兰州大学",
+    "province": "甘肃",
+    "city": "兰州",
+    "level": "985/211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "兰州IT"
+      },
+      {
+        "name": "电子信息科学与技术",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "电子企业、科研院所"
+      },
+      {
+        "name": "核工程与核技术",
+        "category": "核工程类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": false,
+        "employment": "中核集团、核电站"
+      }
+    ],
+    "historyRanks": [16500, 16000, 15500],
+    "historyScores": [543, 547, 552],
+    "avgRank": 16000,
+    "tags": ["985", "西北名校", "性价比高"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-001",
+    "name": "暨南大学",
+    "province": "广东",
+    "city": "广州",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6000,
+    "majors": [
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州电子企业"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州IT、互联网"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "珠三角制造企业"
+      }
+    ],
+    "historyRanks": [9000, 8700, 8400],
+    "historyScores": [580, 584, 588],
+    "avgRank": 8700,
+    "tags": ["211", "华侨学府", "广州"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-002",
+    "name": "武汉理工大学",
+    "province": "湖北",
+    "city": "武汉",
+    "level": "211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "材料科学与工程",
+        "category": "材料类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "新材料企业、科研院所"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "武汉制造、东风汽车"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "武汉智能制造"
+      }
+    ],
+    "historyRanks": [9500, 9200, 8900],
+    "historyScores": [578, 582, 587],
+    "avgRank": 9200,
+    "tags": ["211", "材料强校", "武汉"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-003",
+    "name": "郑州大学",
+    "province": "河南",
+    "city": "郑州",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "郑州制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "郑州IT"
+      },
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "河南电网"
+      }
+    ],
+    "historyRanks": [10800, 10400, 10100],
+    "historyScores": [573, 577, 581],
+    "avgRank": 10433,
+    "tags": ["211", "河南唯一211", "郑州"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-004",
+    "name": "合肥工业大学",
+    "province": "安徽",
+    "city": "合肥",
+    "level": "211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "车辆工程",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "江淮汽车、奇瑞汽车"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "合肥智能制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "合肥IT、科大讯飞生态"
+      }
+    ],
+    "historyRanks": [11000, 10600, 10300],
+    "historyScores": [572, 576, 580],
+    "avgRank": 10633,
+    "tags": ["211", "汽车强校", "合肥"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-005",
+    "name": "华南师范大学",
+    "province": "广东",
+    "city": "广州",
+    "level": "211/双一流",
+    "type": "师范",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6000,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州IT"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州电子企业"
+      },
+      {
+        "name": "光电信息科学与工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": true,
+        "employment": "光电企业、科研院所"
+      }
+    ],
+    "historyRanks": [14000, 13500, 13000],
+    "historyScores": [553, 558, 562],
+    "avgRank": 13500,
+    "tags": ["211", "师范强校", "广州"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-006",
+    "name": "福州大学",
+    "province": "福建",
+    "city": "福州",
+    "level": "211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5460,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "福建电网、电力设计院"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "福州制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "福州IT"
+      }
+    ],
+    "historyRanks": [14000, 13500, 13000],
+    "historyScores": [553, 558, 562],
+    "avgRank": 13500,
+    "tags": ["211", "化工强校", "福建"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-007",
+    "name": "南昌大学",
+    "province": "江西",
+    "city": "南昌",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "南昌制造"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "南昌IT"
+      },
+      {
+        "name": "材料科学与工程",
+        "category": "材料类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "新材料企业"
+      }
+    ],
+    "historyRanks": [14500, 14000, 13500],
+    "historyScores": [550, 555, 560],
+    "avgRank": 14000,
+    "tags": ["211", "江西唯一211", "南昌"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-008",
+    "name": "广西大学",
+    "province": "广西",
+    "city": "南宁",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": true,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "南方电网、广西电网"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "南宁制造、柳工"
+      },
+      {
+        "name": "土木工程",
+        "category": "土木类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "高",
+        "suitedForGirls": false,
+        "employment": "广西建工、建筑企业"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "南宁IT"
+      }
+    ],
+    "historyRanks": [16500, 15800, 15200],
+    "historyScores": [543, 547, 552],
+    "avgRank": 15833,
+    "tags": ["211", "广西唯一211", "本地最优"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-009",
+    "name": "云南大学",
+    "province": "云南",
+    "city": "昆明",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "昆明IT"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "昆明电子企业"
+      },
+      {
+        "name": "通信工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "通信企业"
+      }
+    ],
+    "historyRanks": [17000, 16500, 16000],
+    "historyScores": [540, 545, 548],
+    "avgRank": 16500,
+    "tags": ["211", "双一流", "昆明"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-010",
+    "name": "太原理工大学",
+    "province": "山西",
+    "city": "太原",
+    "level": "211/双一流",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "太原重工、山西制造"
+      },
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "山西电网"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "太原IT"
+      }
+    ],
+    "historyRanks": [17500, 17000, 16500],
+    "historyScores": [538, 542, 545],
+    "avgRank": 17000,
+    "tags": ["211", "山西唯一211", "工科"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-011",
+    "name": "贵州大学",
+    "province": "贵州",
+    "city": "贵阳",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "贵州电网"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "贵阳IT"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "贵阳制造"
+      }
+    ],
+    "historyRanks": [17500, 17000, 16500],
+    "historyScores": [538, 542, 545],
+    "avgRank": 17000,
+    "tags": ["211", "贵州唯一211", "贵阳"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "211-012",
+    "name": "海南大学",
+    "province": "海南",
+    "city": "海口",
+    "level": "211/双一流",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "海口IT"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "海口电子"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "海南制造"
+      }
+    ],
+    "historyRanks": [19000, 18500, 18000],
+    "historyScores": [533, 537, 540],
+    "avgRank": 18500,
+    "tags": ["211", "海南唯一211", "热带特色"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-001",
+    "name": "深圳大学",
+    "province": "广东",
+    "city": "深圳",
+    "level": "省属重点/双非强校",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6200,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "腾讯、华为、深圳IT"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": true,
+        "employment": "深圳电子、华为"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "深圳智能制造"
+      }
+    ],
+    "historyRanks": [16000, 15200, 14800],
+    "historyScores": [545, 550, 553],
+    "avgRank": 15333,
+    "tags": ["双非强校", "深圳", "产业对接"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-002",
+    "name": "上海电力大学",
+    "province": "上海",
+    "city": "上海",
+    "level": "省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "国家电网、上海电力公司"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "上海电力系统"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "上海IT"
+      }
+    ],
+    "historyRanks": [22000, 21000, 20500],
+    "historyScores": [525, 529, 532],
+    "avgRank": 21167,
+    "tags": ["电力王牌", "上海", "电网对口"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-003",
+    "name": "东北电力大学",
+    "province": "吉林",
+    "city": "吉林",
+    "level": "省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "国家电网、五大发电集团"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "电力系统自动化"
+      },
+      {
+        "name": "能源与动力工程",
+        "category": "能源动力类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "发电集团、电力设计院"
+      }
+    ],
+    "historyRanks": [23000, 22000, 21500],
+    "historyScores": [522, 526, 530],
+    "avgRank": 22167,
+    "tags": ["电力黄埔", "电网对口", "东北"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-004",
+    "name": "广东工业大学",
+    "province": "广东",
+    "city": "广州",
+    "level": "省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6200,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州智能制造"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "珠三角制造企业"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州IT"
+      }
+    ],
+    "historyRanks": [24000, 23000, 22500],
+    "historyScores": [520, 524, 527],
+    "avgRank": 23167,
+    "tags": ["省属重点", "工科强校", "广州"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-005",
+    "name": "长沙理工大学",
+    "province": "湖南",
+    "city": "长沙",
+    "level": "省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5500,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "湖南电网、南方电网"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "长沙智能制造"
+      },
+      {
+        "name": "交通运输",
+        "category": "交通运输类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "交通规划设计院"
+      }
+    ],
+    "historyRanks": [24500, 23500, 22800],
+    "historyScores": [518, 522, 526],
+    "avgRank": 23600,
+    "tags": ["电气强校", "交通特色", "长沙"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-006",
+    "name": "广州大学",
+    "province": "广东",
+    "city": "广州",
+    "level": "省属重点",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 6000,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州IT"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "广州电子企业"
+      },
+      {
+        "name": "机械设计制造及其自动化",
+        "category": "机械类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": true,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "广州制造"
+      }
+    ],
+    "historyRanks": [28000, 27000, 26000],
+    "historyScores": [508, 513, 518],
+    "avgRank": 27000,
+    "tags": ["省属重点", "广州", "发展快"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-007",
+    "name": "湘潭大学",
+    "province": "湖南",
+    "city": "湘潭",
+    "level": "双一流/省属重点",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5200,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "湘潭IT、长沙IT"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "湘潭制造"
+      },
+      {
+        "name": "材料科学与工程",
+        "category": "材料类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "新材料企业"
+      }
+    ],
+    "historyRanks": [29000, 28000, 27000],
+    "historyScores": [505, 510, 515],
+    "avgRank": 28000,
+    "tags": ["双一流", "数学强校", "湘潭"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-008",
+    "name": "昆明理工大学",
+    "province": "云南",
+    "city": "昆明",
+    "level": "省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5000,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "云南电网"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "昆明制造"
+      },
+      {
+        "name": "冶金工程",
+        "category": "材料类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "有色金属企业"
+      }
+    ],
+    "historyRanks": [29000, 28000, 27000],
+    "historyScores": [505, 510, 515],
+    "avgRank": 28000,
+    "tags": ["省属重点", "工科强校", "昆明"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-009",
+    "name": "成都理工大学",
+    "province": "四川",
+    "city": "成都",
+    "level": "双一流/省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5200,
+    "majors": [
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "成都IT"
+      },
+      {
+        "name": "勘查技术与工程",
+        "category": "地质类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "地质勘查院"
+      },
+      {
+        "name": "电子信息工程",
+        "category": "电子信息类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "成都电子企业"
+      }
+    ],
+    "historyRanks": [30000, 29000, 28000],
+    "historyScores": [502, 507, 512],
+    "avgRank": 29000,
+    "tags": ["双一流", "地质强校", "成都"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-010",
+    "name": "西安理工大学",
+    "province": "陕西",
+    "city": "西安",
+    "level": "省属重点",
+    "type": "理工",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5200,
+    "majors": [
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "西安制造"
+      },
+      {
+        "name": "水利水电工程",
+        "category": "水利类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "水利设计院"
+      },
+      {
+        "name": "计算机科学与技术",
+        "category": "计算机类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "西安IT"
+      }
+    ],
+    "historyRanks": [30000, 29000, 28000],
+    "historyScores": [502, 507, 512],
+    "avgRank": 29000,
+    "tags": ["省属重点", "水利特色", "西安"],
+    "source": "基于广西招生考试院公开信息估算"
+  },
+  {
+    "id": "ht-011",
+    "name": "三峡大学",
+    "province": "湖北",
+    "city": "宜昌",
+    "level": "省属重点",
+    "type": "综合",
+    "isGuangxiLocal": false,
+    "isPublic": true,
+    "hasLocalPolicy": false,
+    "tuition": 5200,
+    "majors": [
+      {
+        "name": "电气工程及其自动化",
+        "category": "电气类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中高",
+        "suitedForGirls": false,
+        "employment": "国家电网、三峡集团"
+      },
+      {
+        "name": "水利水电工程",
+        "category": "水利类",
+        "isWeakCurrent": false,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": false,
+        "employment": "三峡集团、水利部"
+      },
+      {
+        "name": "自动化",
+        "category": "自动化类",
+        "isWeakCurrent": true,
+        "isHeavyMachinery": false,
+        "physicsDependency": "中",
+        "suitedForGirls": true,
+        "employment": "宜昌制造"
+      }
+    ],
+    "historyRanks": [30500, 29500, 28500],
+    "historyScores": [500, 505, 510],
+    "avgRank": 29500,
+    "tags": ["电力特色", "水利强校", "宜昌"],
+    "source": "基于广西招生考试院公开信息估算"
   }
 ]
