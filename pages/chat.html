@@ -520,43 +520,96 @@
     doApiCall();
   }
 
-  function doGroupChat(userContent, profile) {
+  async function doGroupChat(userContent, profile) {
+    var apiKey = getRawApiKey();
     var roleIds = ['zhangxuefeng', 'policy-expert', 'engineering-analyst', 'data-calculator'];
 
-    if (window.RoleManager && window.RoleManager.groupChat) {
-      window.RoleManager.groupChat(roleIds, getActiveMessages(), userContent, profile,
-        function(roleId, chunk, full) {
-          // This is called per role, but we need to handle differently
-          // For simplicity, append each role's full response
-        }
-      );
-      // Simplified: do them sequentially with simulated responses
+    // If no API key, fall back to local simulation for all roles
+    if (!apiKey) {
       document.getElementById('typingIndicator').classList.add('hidden');
       roleIds.forEach(function(rid, idx) {
         setTimeout(function() {
           var r = ROLES[rid] || {};
           var response = getSimulatedResponseForRole(rid);
-          appendMessage('ai', '【' + (r.name || rid) + '】\n\n' + response, rid);
+          appendMessage('ai', '【' + (r.name || rid) + '】' + response, rid);
           var msgs = getActiveMessages();
           msgs.push({ role: 'assistant', content: response, roleId: rid });
           saveCurrentMessages();
-          if (idx === roleIds.length - 1) {
-            document.getElementById('sendBtn').disabled = false;
-          }
+          document.getElementById('sendBtn').disabled = false;
         }, idx * 200);
       });
-    } else {
-      document.getElementById('typingIndicator').classList.add('hidden');
-      showToast('群聊模式需要API Key配置（离线模式下逐个角色回复）', 'info');
-      roleIds.forEach(function(rid, idx) {
-        setTimeout(function() {
-          var r = ROLES[rid] || {};
-          var response = getSimulatedResponseForRole(rid);
-          appendMessage('ai', '【' + (r.name || rid) + '】\n\n' + response, rid);
-          document.getElementById('sendBtn').disabled = false;
-        }, idx * 300);
+      return;
+    }
+
+    // Ensure cache is ready
+    if (window.RankCache && window.RankCache.initCache) {
+      try { await window.RankCache.initCache(); } catch(e) {}
+    }
+
+    // API mode: call each role sequentially with real AI
+    for (var i = 0; i < roleIds.length; i++) {
+      var rid = roleIds[i];
+      var r = ROLES[rid] || {};
+      if (i > 0) {
+        // Brief pause between roles
+        await new Promise(function(res) { setTimeout(res, 500); });
+      }
+
+      // Build messages for this role
+      var messages = [];
+      if (window.RoleManager) {
+        messages = window.RoleManager.buildMessages(rid, [], userContent, profile);
+      } else {
+        messages.push({ role: 'system', content: getDefaultSystemPrompt(rid, profile) });
+        messages.push({ role: 'user', content: userContent });
+      }
+
+      // Call API and stream response
+      var fullContent = '';
+      var msgEl = null;
+      var roleLabel = '【' + r.name + '】';
+
+      await new Promise(function(resolve) {
+        if (!window.DeepSeekAPI) {
+          fullContent = roleLabel + '\n\n' + getSimulatedResponse(rid);
+          resolve();
+          return;
+        }
+
+        window.DeepSeekAPI.sendChatRequest(messages,
+          function(chunk, full) {
+            fullContent = full;
+            if (!msgEl) {
+              msgEl = appendMessage('ai', roleLabel + '\n\n' + fullContent, rid, false);
+            } else {
+              msgEl.querySelector('.msg-bubble').innerHTML = renderMarkdown(roleLabel + '\n\n' + fullContent);
+            }
+            scrollToBottom();
+          },
+          function(full) {
+            fullContent = full;
+            if (msgEl) {
+              msgEl.querySelector('.msg-bubble').innerHTML = renderMarkdown(roleLabel + '\n\n' + full);
+            } else {
+              appendMessage('ai', roleLabel + '\n\n' + full, rid);
+            }
+            // Save to conversation
+            var msgs = getActiveMessages();
+            msgs.push({ role: 'assistant', content: full, roleId: rid });
+            saveCurrentMessages();
+            resolve();
+          },
+          function(err) {
+            fullContent = roleLabel + '\n\n> ❌ API错误: ' + (err.message || '未知');
+            appendMessage('ai', fullContent, rid);
+            resolve();
+          }
+        );
       });
     }
+
+    document.getElementById('typingIndicator').classList.add('hidden');
+    document.getElementById('sendBtn').disabled = false;
   }
 
   function getDefaultSystemPrompt(roleId, profile) {
