@@ -170,6 +170,7 @@
         <div class="pf-row"><span>总分</span><span class="pf-val" id="pfScore">--</span></div>
         <div class="pf-row"><span>位次</span><span class="pf-val" id="pfRank">--</span></div>
         <div class="pf-row"><span>生源地</span><span class="pf-val" id="pfPlace">--</span></div>
+        <div class="pf-row" id="pfApiStatus"><span>AI模式</span><span class="pf-val" style="color:var(--warning);font-weight:bold">🟡 离线测算</span></div>
       </div>
 
       <!-- Messages Container -->
@@ -199,14 +200,19 @@
   <div id="settingsOverlay" class="modal-overlay hidden" onclick="closeSettingsOutside(event)">
     <div class="modal modal-sm">
       <div class="modal-header">
-        <span class="modal-title"><i class="fa-solid fa-gear"></i> 设置</span>
+        <span class="modal-title"><i class="fa-solid fa-gear"></i> API 设置</span>
         <button class="modal-close" onclick="closeSettings()">&times;</button>
       </div>
       <div class="modal-body">
         <div class="form-group">
           <label class="form-label">DeepSeek API Key</label>
           <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-...">
-          <span class="form-hint">获取地址：<a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a></span>
+          <span class="form-hint">获取地址：<a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com/api_keys</a></span>
+        </div>
+        <div id="apiStatusMsg" style="font-size:13px; margin-bottom:8px;"></div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-sm btn-outline" onclick="testApiConnection()" id="testApiBtn"><i class="fa-solid fa-plug"></i> 测试连接</button>
+          <span id="testResult" style="font-size:12px; line-height:32px;"></span>
         </div>
       </div>
       <div class="modal-footer">
@@ -270,9 +276,11 @@
 
   function updateProfileFloat() {
     var p = getProfile();
+    var hasKey = !!getRawApiKey();
     document.getElementById('pfScore').textContent = p ? p.totalScore + '分' : '未设置';
-    document.getElementById('pfRank').textContent = p ? p.rank.toLocaleString() : '未设置';
+    document.getElementById('pfRank').textContent = p ? (p.rank ? p.rank.toLocaleString() : '?') : '未设置';
     document.getElementById('pfPlace').textContent = p ? p.birthPlace : '未设置';
+    document.getElementById('pfApiStatus').innerHTML = '<span>AI模式</span><span class="pf-val" style="color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + ';font-weight:bold">' + (hasKey ? '🟢 AI在线' : '🟡 离线测算') + '</span>';
   }
 
   // ==================== Role Switching ====================
@@ -551,11 +559,6 @@
     }
   }
 
-  function getRawApiKey() {
-    var encoded = localStorage.getItem('gx_deepseek_api_key');
-    return encoded ? atob(encoded) : null;
-  }
-
   function getDefaultSystemPrompt(roleId, profile) {
     var pt = '';
     if (profile) {
@@ -697,8 +700,15 @@
   // ==================== Settings Modal ====================
   function openSettings() {
     document.getElementById('settingsOverlay').classList.remove('hidden');
-    var encoded = localStorage.getItem('gx_deepseek_api_key');
-    if (encoded) document.getElementById('apiKeyInput').value = atob(encoded);
+    try {
+      var encoded = localStorage.getItem('gx_deepseek_api_key');
+      if (encoded) document.getElementById('apiKeyInput').value = atob(encoded);
+    } catch(e) {
+      // If decoding fails, show raw value
+      document.getElementById('apiKeyInput').value = '';
+    }
+    updateApiStatusMsg();
+    document.getElementById('testResult').textContent = '';
   }
   function closeSettings() {
     document.getElementById('settingsOverlay').classList.add('hidden');
@@ -708,14 +718,85 @@
   }
   function saveSettings() {
     var key = document.getElementById('apiKeyInput').value.trim();
-    if (key) {
-      localStorage.setItem('gx_deepseek_api_key', btoa(key));
-      showToast('API Key 已保存', 'success');
-    } else {
-      localStorage.removeItem('gx_deepseek_api_key');
-      showToast('API Key 已清除', 'info');
+    try {
+      if (key) {
+        localStorage.setItem('gx_deepseek_api_key', btoa(key));
+        showToast('API Key 已保存', 'success');
+        updateApiStatusMsg();
+        updateProfileFloat();
+      } else {
+        localStorage.removeItem('gx_deepseek_api_key');
+        showToast('API Key 已清除', 'info');
+        updateApiStatusMsg();
+        updateProfileFloat();
+      }
+    } catch(e) {
+      showToast('保存失败：' + e.message, 'error');
     }
     closeSettings();
+  }
+  function updateApiStatusMsg() {
+    var el = document.getElementById('apiStatusMsg');
+    if (!el) return;
+    var key = getRawApiKey();
+    if (key) {
+      el.innerHTML = '<span style="color:var(--success);">✅ Key 已配置 (' + key.slice(0, 8) + '...)</span>';
+    } else {
+      el.innerHTML = '<span style="color:var(--warning);">⚠️ 未配置 API Key，将使用离线测算模式</span>';
+    }
+  }
+  function getRawApiKey() {
+    try {
+      var encoded = localStorage.getItem('gx_deepseek_api_key');
+      return encoded ? atob(encoded) : null;
+    } catch(e) {
+      console.error('API Key 读取失败:', e);
+      return null;
+    }
+  }
+  async function testApiConnection() {
+    var btn = document.getElementById('testApiBtn');
+    var result = document.getElementById('testResult');
+    var key = getRawApiKey();
+
+    if (!key) {
+      result.innerHTML = '<span style="color:var(--danger);">请先填入 API Key</span>';
+      return;
+    }
+
+    btn.disabled = true;
+    result.innerHTML = '<span style="color:var(--info);">⏳ 测试中...</span>';
+
+    try {
+      var resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + key
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [{ role: 'user', content: 'hi' }],
+          max_tokens: 5
+        })
+      });
+
+      if (resp.ok) {
+        result.innerHTML = '<span style="color:var(--success);">✅ 连接成功！AI对话可用</span>';
+        showToast('API 连接测试成功', 'success');
+      } else if (resp.status === 401) {
+        result.innerHTML = '<span style="color:var(--danger);">❌ Key 无效(401)，请检查是否正确</span>';
+      } else if (resp.status === 429) {
+        result.innerHTML = '<span style="color:var(--warning);">⚠️ 请求过于频繁(429)，稍后重试</span>';
+      } else {
+        var txt = await resp.text();
+        result.innerHTML = '<span style="color:var(--danger);">❌ 错误(' + resp.status + '): ' + txt.slice(0, 80) + '</span>';
+      }
+    } catch(e) {
+      result.innerHTML = '<span style="color:var(--danger);">❌ 网络错误: ' + e.message.slice(0, 60) + '</span>';
+    }
+    btn.disabled = false;
+    updateProfileFloat();
   }
 
   // ==================== Init ====================
@@ -759,16 +840,6 @@
     document.getElementById('welcomeDesc').textContent = r.welcomeDesc;
 
     renderMessages();
-
-    // API status indicator
-    var hasKey = !!getRawApiKey();
-    var profileFloat = document.getElementById('profileFloat');
-    if (profileFloat) {
-      var statusEl = document.createElement('div');
-      statusEl.className = 'pf-row';
-      statusEl.innerHTML = '<span>AI状态</span><span class="pf-val" style="color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + '">' + (hasKey ? '🟢 在线' : '🟡 离线测算') + '</span>';
-      profileFloat.appendChild(statusEl);
-    }
   })();
   </script>
 </body>
