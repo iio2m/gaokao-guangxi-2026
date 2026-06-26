@@ -351,7 +351,7 @@
       { val: profile.totalScore + '分', label: '总分' },
       { val: profile.rank ? profile.rank.toLocaleString() : '--', label: '省位次' },
       { val: profile.level || '--', label: '分数区间' },
-      { val: (profile.above本科line != null) ? (profile.above本科线 >= 0 ? '+' + profile.above本科线 : profile.above本科线) + '分' : '--', label: '超本科线' },
+      { val: (profile.above本科线 != null) ? (profile.above本科线 >= 0 ? '+' + profile.above本科线 : profile.above本科线) + '分' : '--', label: '超本科线' },
       { val: profile.birthPlace || '--', label: '生源地' },
       { val: profile.gender || '--', label: '性别' }
     ].map(function(item) {
@@ -678,43 +678,29 @@
 
     renderProfileSummary(profile);
 
-    // Load cache then calculate once
-    function doCalculate() {
+    // Calculate immediately — don't wait for anything
+    try {
       var results = calculateVolunteers(profile);
       if (results && results.summary && results.summary.totalSchools > 0) {
         renderResults(results, profile);
       } else {
-        renderEmpty('未匹配到院校，请确认数据已加载');
+        renderEmpty('未匹配到院校，请确认数据或点击"重新计算"');
       }
+    } catch(e) {
+      renderEmpty('计算出错: ' + e.message);
+      console.error(e);
     }
 
-    // Show loading
-    document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="spinner-container"><div class="spinner"></div><div class="spinner-text">正在加载院校数据...</div></div></div>';
-
-    var calculated = false;
-    function safeCalculate() {
-      if (calculated) return;
-      calculated = true;
-      try { doCalculate(); } catch(e) {
-        renderEmpty('计算出错: ' + (e.message || '未知错误') + '。请点击"重新计算"重试。');
-      }
-    }
-
-    // Fallback: if cache doesn't respond in 8 seconds, calculate anyway
-    var fallbackTimer = setTimeout(function() { safeCalculate(); }, 8000);
-
+    // Background: try loading full data, then re-render
     if (window.RankCache && window.RankCache.initCache) {
       window.RankCache.initCache().then(function() {
-        clearTimeout(fallbackTimer);
-        safeCalculate();
-      }).catch(function() {
-        clearTimeout(fallbackTimer);
-        safeCalculate();
-      });
-    } else {
-      // No cache module
-      clearTimeout(fallbackTimer);
-      setTimeout(safeCalculate, 300);
+        try {
+          var r2 = calculateVolunteers(profile);
+          if (r2 && r2.summary && r2.summary.totalSchools > 0) {
+            renderResults(r2, profile);
+          }
+        } catch(e) { console.warn('Background refresh failed:', e); }
+      }).catch(function(){});
     }
 
     loadApiKey();
