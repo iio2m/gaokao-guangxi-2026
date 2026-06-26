@@ -13,15 +13,33 @@
    * Only runs if no cache exists
    * @returns {Promise<void>}
    */
+  /**
+   * Get the project root path that works for both local dev and GitHub Pages
+   * e.g. '/gaokao-guangxi-2026' from 'https://iio2m.github.io/gaokao-guangxi-2026/pages/chat.html'
+   */
+  function getBasePath() {
+    var path = window.location.pathname;
+    // Remove trailing filename (e.g. /pages/chat.html → /pages, /index.html → /)
+    path = path.replace(/\/[^/]*\.html?$/, '');
+    // Remove trailing /pages if present
+    if (path.endsWith('/pages')) path = path.replace(/\/pages$/, '');
+    // Ensure not empty (means we're at root)
+    if (!path || path === '') path = '';
+    // Remove trailing slash
+    path = path.replace(/\/$/, '');
+    return path;
+  }
+
   async function initCache() {
     if (!localStorage.getItem(CACHE_KEY)) {
-      // Load from data files
+      var base = getBasePath();
+      // Load from data files using absolute path from project root
       try {
         var results = await Promise.all([
-          fetch('data/schools.json'),
-          fetch('data/guangxi_2023.json'),
-          fetch('data/guangxi_2024.json'),
-          fetch('data/guangxi_2025.json')
+          fetch(base + '/data/schools.json'),
+          fetch(base + '/data/guangxi_2023.json'),
+          fetch(base + '/data/guangxi_2024.json'),
+          fetch(base + '/data/guangxi_2025.json')
         ]);
 
         var schoolsResp = results[0];

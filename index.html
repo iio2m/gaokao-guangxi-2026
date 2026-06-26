@@ -350,6 +350,10 @@
 
   // ==================== Init ====================
   document.addEventListener('DOMContentLoaded', function() {
+    // Preload school data cache in background
+    if (window.RankCache && window.RankCache.initCache) {
+      window.RankCache.initCache();
+    }
     populateCounties();
     loadApiKey();
     // Restore saved profile if exists

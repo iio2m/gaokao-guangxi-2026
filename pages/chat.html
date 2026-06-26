@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="../css/style.css">
   <style>
     /* Chat page layout */
-    .chat-layout { display: flex; min-height: calc(100vh - var(--header-height)); }
+    .chat-layout { display: flex; height: calc(100vh - var(--header-height)); overflow: hidden; }
     .chat-sidebar {
       width: 220px; min-width: 220px; background: var(--card-bg);
       border-right: 1px solid var(--border-light); padding: 12px 8px;
-      display: flex; flex-direction: column; overflow-y: auto;
+      display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0;
     }
     .chat-sidebar .sidebar-label {
       font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
@@ -34,7 +34,7 @@
     .role-icon-orange { background: #F39C12; }
     .role-icon-purple { background: linear-gradient(135deg, #8E44AD, #9B59B6); }
     .role-btn .role-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
     .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
     .chat-msg { display: flex; gap: 10px; max-width: 100%; animation: messageSlideIn 0.3s ease; }
     .chat-msg.user { flex-direction: row-reverse; }
@@ -566,13 +566,88 @@
   }
 
   function getSimulatedResponse(roleId) {
+    var profile = getProfile();
+    var p = profile || { totalScore: '?', rank: '?' };
+
+    if (roleId === 'data-calculator') {
+      return getLocalDataCalculatorResponse(profile);
+    }
+
     var responses = {
-      'zhangxuefeng': '在没有API Key的情况下，我暂时无法进行实时AI对话。\n\n不过你可以先看看这些建议：\n- 489分在广西属于二本区间，位次76054\n- 优先考虑**广西区内公办院校**，学费低、就业有保障\n- 物理50分偏弱，建议避开强物理依赖的专业（如重型机械、土木）\n- 英语113分是优势，可以考虑自动化、测控等弱电方向\n\n配置DeepSeek API Key后可以获得更详细的分析！',
-      'policy-expert': '未能连接到AI服务。\n\n广西2026平行志愿核心规则回顾：\n- **分数优先、遵循志愿、一次投档**\n- 物理类本科普通批可填多个院校志愿\n- 服从调剂在同专业组内调剂\n- 建议配置API Key以获取个性化政策解读',
-      'engineering-analyst': '离线模式下无法进行实时分析。\n\n工科方向速览（针对物理50分）：\n- **推荐**：电子信息类、自动化类、测控技术与仪器\n- **中性**：电气工程及其自动化（电网方向可冲）\n- **谨慎**：机械设计制造（物理要求高）\n- **避开**：热能与动力工程、土木工程',
-      'data-calculator': '离线模式，数据测算需要联网。\n\n基于您489分/76054位次的推算：\n| 梯队 | 位次区间 | 院校数 |\n|------|---------|-------|\n| 冲刺 | 64054-74054 | 约4-6所 |\n| 稳妥 | 74054-84054 | 约8-12所 |\n| 保底 | 84054-101054 | 约6-10所 |\n\n配置API Key获取精确测算。'
+      'zhangxuefeng': '⚠️ 离线模式（未配API Key）\n\n基于本地数据，489分/76054位次在广西属于**二本区间**。\n\n建议：\n- 优先**广西区内公办院校**，学费低、就业有保障\n- 物理50分偏弱，避开重机械/土木，选弱电方向\n- 英语113分是优势，可考虑自动化、测控\n\n💡 配置DeepSeek API Key后可获得：实时个性化分析、多轮追问、详细就业拆解',
+      'policy-expert': '⚠️ 离线模式（未配API Key）\n\n广西2026平行志愿核心规则：\n- **分数优先、遵循志愿、一次投档**\n- 物理类本科普通批可填多个院校志愿\n- 服从调剂在**同专业组内**调剂，不会跨组\n- 建议冲刺院校勾选服从调剂\n\n💡 配置API Key可获个性化政策解读',
+      'engineering-analyst': '⚠️ 离线模式（未配API Key）\n\n工科方向速览（针对物理50分/英语113分）：\n- ⭐⭐⭐⭐⭐ **推荐**：电子信息、自动化、测控技术与仪器\n- ⭐⭐⭐⭐ **可选**：电气工程及其自动化（电网方向）\n- ⭐⭐ **谨慎**：机械设计制造（物理要求高）\n- ❌ **避开**：热能与动力工程\n\n💡 配置API Key可获详细课程分析和就业路径规划'
     };
     return responses[roleId] || responses['zhangxuefeng'];
+  }
+
+  function getLocalDataCalculatorResponse(profile) {
+    if (!profile) return '请先在首页保存考生信息。';
+
+    var rank = profile.rank;
+    var schools = null;
+
+    // Try to load schools from cache or fetch
+    if (window.RankCache) {
+      schools = window.RankCache.getCachedData('schools');
+    }
+
+    if (!schools || !schools.length) {
+      // Fallback: try to fetch synchronously isn't possible, show brief info
+      return '📦 正在加载院校数据...\n\n请稍后重试。如果持续无法加载，请检查 data/schools.json 文件。\n\n基于位次' + rank.toLocaleString() + '的推算：\n- 冲刺区间：' + (rank - 12000).toLocaleString() + ' ~ ' + (rank - 4000).toLocaleString() + '\n- 稳妥区间：' + (rank - 4000).toLocaleString() + ' ~ ' + (rank + 6000).toLocaleString() + '\n- 保底区间：' + (rank + 6000).toLocaleString() + ' ~ ' + (rank + 18000).toLocaleString();
+    }
+
+    // Run chong-wen-bao algorithm locally
+    var result;
+    if (window.ChongWenBao && window.WeightAdjust) {
+      result = window.ChongWenBao.calculateChongWenBao(rank, schools);
+    } else {
+      // Manual fallback calculation
+      var config = (window.GX_CONFIG && window.GX_CONFIG.chongWenBao) || { 冲刺: {min:-12000,max:-4000}, 稳妥: {min:-4000,max:6000}, 保底: {min:6000,max:18000} };
+      result = { 冲刺: [], 稳妥: [], 保底: [] };
+      schools.forEach(function(s) {
+        var delta = s.avgRank - rank;
+        var tier;
+        if (delta >= config['冲刺'].min && delta <= config['冲刺'].max) tier = '冲刺';
+        else if (delta >= config['稳妥'].min && delta <= config['稳妥'].max) tier = '稳妥';
+        else if (delta >= config['保底'].min && delta <= config['保底'].max) tier = '保底';
+        else return;
+        var risk = Math.max(1, Math.min(95, Math.round((1 - (s.avgRank - rank + 12000) / 30000) * 100)));
+        if (s.isGuangxiLocal) risk = Math.max(1, risk - 8);
+        result[tier].push({ name: s.name, city: s.city, province: s.province, avgRank: s.avgRank, riskPercent: risk, isGuangxiLocal: s.isGuangxiLocal, majors: s.majors });
+      });
+      ['冲刺', '稳妥', '保底'].forEach(function(t) { result[t].sort(function(a,b) { return t === '冲刺' ? a.avgRank - b.avgRank : a.riskPercent - b.riskPercent; }); });
+      if (result.冲刺.length > 6) result.冲刺 = result.冲刺.slice(0, 6);
+      if (result.稳妥.length > 15) result.稳妥 = result.稳妥.slice(0, 15);
+    }
+
+    var text = '🔢 **离线圈数据测算**\n\n';
+    text += '基于 ' + profile.totalScore + '分 / ' + rank.toLocaleString() + ' 位次，85所公办院校数据\n';
+    text += '广西区内加权+3000 · 弱电专业风险下调\n\n';
+
+    var tierLabels = { '冲刺': '🚀', '稳妥': '✅', '保底': '🛡️' };
+    var schoolCount = 0;
+
+    ['冲刺', '稳妥', '保底'].forEach(function(tier) {
+      var list = result[tier] || [];
+      if (list.length === 0) return;
+      text += '### ' + tierLabels[tier] + ' **' + tier + '档**（' + list.length + '所）\n\n';
+      text += '| 院校 | 所在地 | 平均位次 | 录取风险 |\n';
+      text += '|------|--------|----------|----------|\n';
+      list.slice(0, 8).forEach(function(s) {
+        text += '| ' + s.name + (s.isGuangxiLocal ? ' 🏠' : '') + ' | ' + (s.city || s.province) + ' | ' + s.avgRank.toLocaleString() + ' | ' + s.riskPercent + '% |\n';
+        schoolCount++;
+      });
+      text += '\n';
+    });
+
+    var slipProb = result.summary ? result.summary.slipProbability : (result.保底.length >= 6 ? '<2%' : result.保底.length >= 4 ? '3-5%' : '5-10%');
+    text += '---\n';
+    text += '📊 共推荐 **' + schoolCount + '** 所院校 | 整体滑档概率：**' + slipProb + '**\n\n';
+    text += '> ⚠️ 此为本地离线测算。配置 [DeepSeek API Key](设置) 后可使用AI实时分析，获得更详细的个性化建议。\n';
+    text += '> 📊 查看完整冲稳保清单请点击 → [志愿推荐页](../pages/volunteer.html)';
+
+    return text;
   }
 
   function getSimulatedResponseForRole(roleId) {
@@ -640,10 +715,14 @@
 
   // ==================== Init ====================
   (function init() {
+    // Start loading school data into cache (non-blocking)
+    if (window.RankCache && window.RankCache.initCache) {
+      window.RankCache.initCache();
+    }
+
     var profile = getProfile();
     if (!profile) {
       showToast('请先在首页填写考生信息', 'warning');
-      // Don't redirect immediately, allow user to configure
     }
 
     updateProfileFloat();
@@ -675,6 +754,16 @@
     document.getElementById('welcomeDesc').textContent = r.welcomeDesc;
 
     renderMessages();
+
+    // API status indicator
+    var hasKey = !!getRawApiKey();
+    var profileFloat = document.getElementById('profileFloat');
+    if (profileFloat) {
+      var statusEl = document.createElement('div');
+      statusEl.className = 'pf-row';
+      statusEl.innerHTML = '<span>AI状态</span><span class="pf-val" style="color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + '">' + (hasKey ? '🟢 在线' : '🟡 离线测算') + '</span>';
+      profileFloat.appendChild(statusEl);
+    }
   })();
   </script>
 </body>

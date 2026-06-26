@@ -608,6 +608,22 @@
 
   // ==================== Init ====================
   document.addEventListener('DOMContentLoaded', function() {
+    // Start loading school data into cache
+    var cachedSchools = null;
+    if (window.RankCache && window.RankCache.initCache) {
+      window.RankCache.initCache().then(function() {
+        cachedSchools = window.RankCache.getCachedData('schools');
+        if (cachedSchools && cachedSchools.length > 0) {
+          // Re-run calculation with full data
+          var profile = getProfile();
+          if (profile) {
+            var results = calculateVolunteers(profile);
+            renderResults(results, profile);
+          }
+        }
+      });
+    }
+
     var profile = getProfile();
     if (profile) {
       renderProfileSummary(profile);
