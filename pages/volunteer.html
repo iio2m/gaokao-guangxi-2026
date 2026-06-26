@@ -688,17 +688,33 @@
       }
     }
 
+    // Show loading
+    document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="spinner-container"><div class="spinner"></div><div class="spinner-text">正在加载院校数据...</div></div></div>';
+
+    var calculated = false;
+    function safeCalculate() {
+      if (calculated) return;
+      calculated = true;
+      try { doCalculate(); } catch(e) {
+        renderEmpty('计算出错: ' + (e.message || '未知错误') + '。请点击"重新计算"重试。');
+      }
+    }
+
+    // Fallback: if cache doesn't respond in 8 seconds, calculate anyway
+    var fallbackTimer = setTimeout(function() { safeCalculate(); }, 8000);
+
     if (window.RankCache && window.RankCache.initCache) {
-      // Show loading
-      document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="spinner-container"><div class="spinner"></div><div class="spinner-text">正在加载院校数据...</div></div></div>';
       window.RankCache.initCache().then(function() {
-        doCalculate();
+        clearTimeout(fallbackTimer);
+        safeCalculate();
       }).catch(function() {
-        doCalculate(); // Fallback
+        clearTimeout(fallbackTimer);
+        safeCalculate();
       });
     } else {
-      // No cache module, calculate immediately
-      setTimeout(doCalculate, 200);
+      // No cache module
+      clearTimeout(fallbackTimer);
+      setTimeout(safeCalculate, 300);
     }
 
     loadApiKey();

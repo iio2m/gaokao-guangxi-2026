@@ -405,9 +405,15 @@
     return html;
   }
 
+  function isNearBottom(el) {
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+  }
   function scrollToBottom() {
     var container = document.getElementById('chatMessages');
-    requestAnimationFrame(function() { container.scrollTop = container.scrollHeight; });
+    // Only auto-scroll if user is near the bottom (not reading history)
+    if (isNearBottom(container)) {
+      requestAnimationFrame(function() { container.scrollTop = container.scrollHeight; });
+    }
   }
 
   // ==================== Send Message ====================
