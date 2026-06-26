@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="广西2026高考志愿填报助手 - 基于AI多角色对话的物理类志愿填报辅助工具">
+  <title>广西2026高考志愿填报助手</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    /* Page-specific overrides */
+    .hero-section { text-align: center; padding: 32px 16px 24px; }
+    .hero-section .hero-icon { font-size: 56px; margin-bottom: 8px; }
+    .hero-section h1 { font-size: 28px; color: var(--primary); font-weight: var(--font-weight-bold); margin-bottom: 4px; }
+    .hero-section .tagline { color: var(--text-secondary); font-size: var(--font-size-sm); margin-bottom: 0; }
+    .subject-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .score-analysis { display: none; background: linear-gradient(135deg, var(--primary) 0%, #2ecc71 100%); color: #fff; border-radius: var(--radius-md); padding: 24px; margin-bottom: 16px; }
+    .score-analysis.show { display: block; animation: fadeIn 0.3s ease; }
+    .score-analysis .sa-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center; }
+    .score-analysis .sa-val { font-size: 32px; font-weight: 700; }
+    .score-analysis .sa-label { font-size: var(--font-size-xs); opacity: 0.85; margin-top: 2px; }
+    .score-analysis .sa-detail { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.3); font-size: var(--font-size-sm); opacity: 0.9; line-height: 1.7; }
+    .action-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .disclaimer-bar { text-align: center; padding: 16px; color: var(--text-muted); font-size: var(--font-size-xs); line-height: 1.8; border-top: 1px solid var(--border-light); }
+    @media (max-width: 768px) {
+      .subject-row { grid-template-columns: 1fr 1fr; }
+      .score-analysis .sa-row { grid-template-columns: 1fr; gap: 8px; }
+      .score-analysis .sa-val { font-size: 24px; }
+      .action-buttons { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="header-title"><i class="fa-solid fa-bullseye"></i> 广西2026高考志愿填报助手</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-icon" onclick="openSettings()" title="设置"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </header>
+
+  <main class="app-content">
+
+    <!-- Hero -->
+    <div class="hero-section">
+      <div class="hero-icon">🎯</div>
+      <h1>广西2026高考志愿填报助手</h1>
+      <p class="tagline">AI多角色对话 · 冲稳保智能推荐 · 工科志愿精准匹配</p>
+    </div>
+
+    <!-- Student Info Form -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-user-pen"></i> 考生信息录入
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label form-required">总分</label>
+            <input type="number" id="totalScore" class="form-input" placeholder="输入高考总分" min="200" max="750">
+          </div>
+          <div class="form-group">
+            <label class="form-label form-required">省位次</label>
+            <input type="number" id="rank" class="form-input" placeholder="输入全省位次">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">各科成绩</label>
+          <div class="subject-row">
+            <input type="number" id="subYu" class="form-input" placeholder="语文" min="0" max="150">
+            <input type="number" id="subShu" class="form-input" placeholder="数学" min="0" max="150">
+            <input type="number" id="subYing" class="form-input" placeholder="英语" min="0" max="150">
+            <input type="number" id="subWuli" class="form-input" placeholder="物理" min="0" max="100">
+            <input type="number" id="subHuaxue" class="form-input" placeholder="化学" min="0" max="100">
+            <input type="number" id="subShengwu" class="form-input" placeholder="生物" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label form-required">生源地</label>
+            <select id="birthPlace" class="form-select">
+              <option value="">-- 请选择 --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">性别</label>
+            <select id="gender" class="form-select">
+              <option value="">-- 请选择 --</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">家庭情况</label>
+          <input type="text" id="family" class="form-input" placeholder="如：普通工人家庭、务农、个体户等">
+        </div>
+
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="fillExample()"><i class="fa-solid fa-wand-magic-sparkles"></i> 填入示例</button>
+          <button class="btn btn-primary" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> 保存信息</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Analysis Card (hidden until saved) -->
+    <div id="scoreAnalysis" class="score-analysis">
+      <div class="sa-row">
+        <div>
+          <div class="sa-val" id="saAboveLine">--</div>
+          <div class="sa-label">超本科线</div>
+        </div>
+        <div>
+          <div class="sa-val" id="saRank">--</div>
+          <div class="sa-label">省位次</div>
+        </div>
+        <div>
+          <div class="sa-val" id="saEquivalent">--</div>
+          <div class="sa-label">等效去年分</div>
+        </div>
+      </div>
+      <div class="sa-detail" id="saDetail"></div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-primary btn-lg" onclick="goToChat()"><i class="fa-solid fa-comments"></i> 开始AI对话</button>
+      <button class="btn btn-accent btn-lg" onclick="goToVolunteer()"><i class="fa-solid fa-table-list"></i> 查看志愿推荐</button>
+    </div>
+
+    <!-- Data Source Disclaimer -->
+    <div class="disclaimer-bar">
+      数据来源：<a href="https://zyfz.gxeea.cn/" target="_blank" rel="noopener">广西招生考试院</a>、
+      <a href="https://gaokao.chsi.com.cn/" target="_blank" rel="noopener">阳光高考</a>
+      &nbsp;|&nbsp; 仅供个人参考，实际填报请以官方公布为准
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsOverlay" class="modal-overlay hidden" onclick="closeSettingsOutside(event)">
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <span class="modal-title"><i class="fa-solid fa-gear"></i> 设置</span>
+          <button class="modal-close" onclick="closeSettings()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">DeepSeek API Key</label>
+            <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-...">
+            <span class="form-hint">获取地址：<a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeSettings()">取消</button>
+          <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="src/data-engine/score-rank-convert.js"></script>
+  <script src="src/data-engine/data-filter.js"></script>
+  <script src="src/data-engine/rank-cache.js"></script>
+  <script src="src/api/network-status.js"></script>
+
+  <script>
+  // ==================== Toast ====================
+  function showToast(msg, type) {
+    var container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + (type || 'info');
+    var icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+    toast.innerHTML = '<span class="toast-icon"><i class="fa-solid ' + icon + '"></i></span><div class="toast-body"><div class="toast-message">' + msg + '</div></div>';
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.classList.add('removing');
+      setTimeout(function() { toast.remove(); if (container.children.length === 0) container.remove(); }, 300);
+    }, 3000);
+  }
+
+  // ==================== Settings Modal ====================
+  function openSettings() {
+    document.getElementById('settingsOverlay').classList.remove('hidden');
+    loadApiKey();
+  }
+  function closeSettings() {
+    document.getElementById('settingsOverlay').classList.add('hidden');
+  }
+  function closeSettingsOutside(e) {
+    if (e.target === document.getElementById('settingsOverlay')) closeSettings();
+  }
+  function loadApiKey() {
+    var encoded = localStorage.getItem('gx_deepseek_api_key');
+    if (encoded) document.getElementById('apiKeyInput').value = atob(encoded);
+  }
+  function saveSettings() {
+    var key = document.getElementById('apiKeyInput').value.trim();
+    if (key) {
+      localStorage.setItem('gx_deepseek_api_key', btoa(key));
+      showToast('API Key 已保存', 'success');
+    } else {
+      localStorage.removeItem('gx_deepseek_api_key');
+      showToast('API Key 已清除', 'info');
+    }
+    closeSettings();
+  }
+
+  // ==================== County Dropdown ====================
+  function populateCounties() {
+    var sel = document.getElementById('birthPlace');
+    var counties = (window.GX_CONFIG && window.GX_CONFIG.counties) || [
+      '南宁市本级','南宁市武鸣区','南宁市隆安县','南宁市马山县','南宁市上林县','南宁市宾阳县','南宁市横州市',
+      '柳州市本级','柳州市柳城县','柳州市鹿寨县','柳州市融安县','柳州市融水苗族自治县','柳州市三江侗族自治县',
+      '桂林市本级','桂林市阳朔县','桂林市临桂区','桂林市灵川县','桂林市全州县','桂林市兴安县','桂林市永福县','桂林市灌阳县','桂林市龙胜各族自治县','桂林市资源县','桂林市平乐县','桂林市恭城瑶族自治县','桂林市荔浦市',
+      '梧州市本级','梧州市苍梧县','梧州市藤县','梧州市蒙山县','梧州市岑溪市',
+      '北海市本级','北海市合浦县',
+      '防城港市本级','防城港市上思县','防城港市东兴市',
+      '钦州市本级','钦州市灵山县','钦州市浦北县',
+      '贵港市本级','贵港市平南县','贵港市桂平市',
+      '玉林市本级','玉林市容县','玉林市陆川县','玉林市博白县','玉林市兴业县','玉林市北流市',
+      '百色市本级','百色市田阳区','百色市田东县','百色市德保县','百色市那坡县','百色市凌云县','百色市乐业县','百色市田林县','百色市西林县','百色市隆林各族自治县','百色市靖西市','百色市平果市',
+      '贺州市本级','贺州市昭平县','贺州市钟山县','贺州市富川瑶族自治县',
+      '河池市本级','河池市南丹县','河池市天峨县','河池市凤山县','河池市东兰县','河池市罗城仫佬族自治县','河池市环江毛南族自治县','河池市巴马瑶族自治县','河池市都安瑶族自治县','河池市大化瑶族自治县','河池市宜州区',
+      '来宾市本级','来宾市忻城县','来宾市象州县','来宾市武宣县','来宾市金秀瑶族自治县','来宾市合山市',
+      '崇左市本级','崇左市扶绥县','崇左市宁明县','崇左市龙州县','崇左市大新县','崇左市天等县','崇左市凭祥市'
+    ];
+    counties.forEach(function(c) {
+      var opt = document.createElement('option');
+      opt.value = c; opt.textContent = c; sel.appendChild(opt);
+    });
+  }
+
+  // ==================== Fill Example ====================
+  function fillExample() {
+    document.getElementById('totalScore').value = 489;
+    document.getElementById('rank').value = 76054;
+    document.getElementById('subYu').value = 102;
+    document.getElementById('subShu').value = 74;
+    document.getElementById('subYing').value = 113;
+    document.getElementById('subWuli').value = 50;
+    document.getElementById('subHuaxue').value = 70;
+    document.getElementById('subShengwu').value = 80;
+    document.getElementById('birthPlace').value = '玉林市博白县';
+    document.getElementById('gender').value = '女';
+    document.getElementById('family').value = '普通工人家庭';
+    showToast('已填入示例数据 (489分/76054位次)', 'info');
+  }
+
+  // ==================== Save Profile ====================
+  function saveProfile() {
+    var totalScore = parseInt(document.getElementById('totalScore').value) || 0;
+    var rank = parseInt(document.getElementById('rank').value) || 0;
+    if (!totalScore || !rank) { showToast('请填写总分和省位次', 'warning'); return; }
+    var birthPlace = document.getElementById('birthPlace').value;
+    if (!birthPlace) { showToast('请选择生源地', 'warning'); return; }
+
+    var profile = {
+      totalScore: totalScore,
+      rank: rank,
+      subjects: {
+        '语文': parseInt(document.getElementById('subYu').value) || 0,
+        '数学': parseInt(document.getElementById('subShu').value) || 0,
+        '英语': parseInt(document.getElementById('subYing').value) || 0,
+        '物理': parseInt(document.getElementById('subWuli').value) || 0,
+        '化学': parseInt(document.getElementById('subHuaxue').value) || 0,
+        '生物': parseInt(document.getElementById('subShengwu').value) || 0
+      },
+      birthPlace: birthPlace,
+      gender: document.getElementById('gender').value || '未填写',
+      family: document.getElementById('family').value || '未填写',
+      preferredMajors: ['电气类', '电子信息类', '自动化类'],
+      preferredRegions: ['广西', '广东']
+    };
+
+    // Compute score analysis using ScoreRankConvert if available
+    try {
+      if (window.ScoreRankConvert && window.GX_CONFIG) {
+        var enriched = window.ScoreRankConvert.buildStudentProfile(profile);
+        profile.above本科线 = enriched.above本科线;
+        profile.below特控线 = enriched.below特控线;
+        profile.description = enriched.description;
+        profile.level = enriched.level;
+        profile.hasLocalPolicy = enriched.hasLocalPolicy;
+      } else {
+        var baseline = 368; // 本科线
+        profile.above本科线 = totalScore - baseline;
+        profile.description = (profile.above本科线 >= 0 ? '超本科线' + profile.above本科线 + '分' : '低于本科线' + Math.abs(profile.above本科线) + '分') + '，位次' + rank;
+        profile.level = totalScore >= 510 ? '一本区间' : '二本区间';
+        profile.hasLocalPolicy = birthPlace.indexOf('博白县') >= 0;
+      }
+    } catch (e) {
+      profile.description = '总分' + totalScore + '分，位次' + rank;
+      profile.level = '未知';
+      profile.above本科线 = totalScore - 368;
+    }
+
+    localStorage.setItem('gx_student_profile', JSON.stringify(profile));
+    showToast('考生信息已保存', 'success');
+    updateScoreAnalysis(profile);
+  }
+
+  // ==================== Update Score Analysis Card ====================
+  function updateScoreAnalysis(profile) {
+    var card = document.getElementById('scoreAnalysis');
+    card.classList.add('show');
+
+    document.getElementById('saAboveLine').textContent = (profile.above本科线 != null) ? (profile.above本科线 >= 0 ? '+' + profile.above本科线 : profile.above本科line) + '分' : '--';
+    document.getElementById('saRank').textContent = profile.rank ? profile.rank.toLocaleString() : '--';
+
+    // Equivalent score estimate
+    var equivalent = profile.totalScore ? Math.round(profile.totalScore * 0.97) : '--';
+    document.getElementById('saEquivalent').textContent = equivalent + '分';
+
+    var detailParts = [];
+    detailParts.push('定位：' + (profile.level || '--'));
+    if (profile.description) detailParts.push(profile.description);
+    if (profile.hasLocalPolicy) detailParts.push('具备地方专项资格（玉林博白户籍）');
+    if (profile.subjects && profile.subjects['物理'] != null) {
+      var wl = profile.subjects['物理'];
+      if (wl > 0 && wl < 60) detailParts.push('物理单科偏弱（' + wl + '分），优先弱电方向');
+    }
+    document.getElementById('saDetail').textContent = detailParts.join(' | ');
+  }
+
+  // ==================== Navigation ====================
+  function goToChat() {
+    var profile = localStorage.getItem('gx_student_profile');
+    if (!profile) { showToast('请先保存考生信息', 'warning'); return; }
+    window.location.href = 'pages/chat.html';
+  }
+  function goToVolunteer() {
+    var profile = localStorage.getItem('gx_student_profile');
+    if (!profile) { showToast('请先保存考生信息', 'warning'); return; }
+    window.location.href = 'pages/volunteer.html';
+  }
+
+  // ==================== Init ====================
+  document.addEventListener('DOMContentLoaded', function() {
+    populateCounties();
+    loadApiKey();
+    // Restore saved profile if exists
+    var savedStr = localStorage.getItem('gx_student_profile');
+    if (savedStr) {
+      try {
+        var saved = JSON.parse(savedStr);
+        if (saved.totalScore) document.getElementById('totalScore').value = saved.totalScore;
+        if (saved.rank) document.getElementById('rank').value = saved.rank;
+        if (saved.subjects) {
+          document.getElementById('subYu').value = saved.subjects['语文'] || '';
+          document.getElementById('subShu').value = saved.subjects['数学'] || '';
+          document.getElementById('subYing').value = saved.subjects['英语'] || '';
+          document.getElementById('subWuli').value = saved.subjects['物理'] || '';
+          document.getElementById('subHuaxue').value = saved.subjects['化学'] || '';
+          document.getElementById('subShengwu').value = saved.subjects['生物'] || '';
+        }
+        if (saved.birthPlace) document.getElementById('birthPlace').value = saved.birthPlace;
+        if (saved.gender) document.getElementById('gender').value = saved.gender;
+        if (saved.family) document.getElementById('family').value = saved.family;
+        updateScoreAnalysis(saved);
+      } catch(e) {}
+    }
+  });
+  </script>
+</body>
+</html>

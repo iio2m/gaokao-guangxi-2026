@@ -1,0 +1,29 @@
+name: Auto Sync Guangxi Data
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at UTC 0:00 (Beijing 8:00)
+  workflow_dispatch:      # Manual trigger
+
+jobs:
+  sync-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run data sync script
+        run: node scripts/auto-update-data.js
+
+      - name: Commit and push if data changed
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: auto update Guangxi enrollment data $(date +'%Y-%m-%d')"
+          git push

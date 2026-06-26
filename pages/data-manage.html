@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="数据管理 - 广西高考志愿填报助手数据缓存与刷新">
+  <title>数据管理 - 广西2026高考志愿填报助手</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .data-source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .ds-card {
+      background: var(--card-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+      padding: 20px; text-align: center; border: 2px solid transparent; transition: all var(--transition-base);
+    }
+    .ds-card.online { border-color: var(--success); }
+    .ds-card.offline { border-color: var(--danger); }
+    .ds-card.unknown { border-color: var(--border); }
+    .ds-card .ds-icon { font-size: 32px; margin-bottom: 8px; }
+    .ds-card .ds-name { font-weight: var(--font-weight-semibold); font-size: var(--font-size-base); margin-bottom: 6px; }
+    .ds-card .ds-status {
+      display: inline-block; padding: 3px 12px; border-radius: var(--radius-full);
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+    }
+    .ds-status.online { background: var(--success-light); color: var(--success); }
+    .ds-status.offline { background: var(--danger-light); color: var(--danger); }
+    .ds-status.unknown { background: var(--bg); color: var(--text-muted); }
+    .ds-card .ds-note { font-size: var(--font-size-xs); color: var(--text-muted); margin-top: 6px; }
+    .cache-table { width: 100%; border-collapse: collapse; }
+    .cache-table td { padding: 10px 14px; border-bottom: 1px solid var(--divider); font-size: var(--font-size-sm); }
+    .cache-table td:first-child { font-weight: var(--font-weight-medium); color: var(--text-secondary); width: 150px; }
+    .cache-table td:last-child { font-weight: var(--font-weight-semibold); }
+    .data-link-item {
+      display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+      background: var(--card-bg); border-radius: var(--radius-sm); box-shadow: var(--shadow-xs);
+      margin-bottom: 8px; color: var(--text-primary); transition: all var(--transition-base);
+      text-decoration: none; border: 1px solid var(--border-light);
+    }
+    .data-link-item:hover { background: var(--primary-lighter); box-shadow: var(--shadow-sm); text-decoration: none; }
+    .data-link-item .dl-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--info-light); color: var(--info); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .data-link-item .dl-info { flex: 1; }
+    .data-link-item .dl-name { font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); }
+    .data-link-item .dl-desc { font-size: var(--font-size-xs); color: var(--text-muted); }
+    .data-link-item .dl-arrow { color: var(--text-muted); }
+    .offline-indicator {
+      display: none; padding: 10px 16px; text-align: center; background: var(--warning);
+      color: #fff; font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);
+      border-radius: var(--radius-sm); margin-bottom: 16px;
+    }
+    .offline-indicator.show { display: block; }
+    @media (max-width: 768px) {
+      .data-source-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="btn-icon" onclick="window.location.href='../index.html'" title="返回"><i class="fa-solid fa-arrow-left"></i></button>
+      <span class="header-title"><i class="fa-solid fa-database"></i> 数据管理</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-icon" onclick="openSettings()" title="设置"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </header>
+
+  <main class="app-content">
+
+    <!-- Offline Indicator -->
+    <div id="offlineIndicator" class="offline-indicator">
+      <i class="fa-solid fa-cloud-bolt"></i> 当前处于离线模式，使用本地缓存数据
+    </div>
+
+    <!-- Data Source Status -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-satellite-dish"></i> 数据源状态
+      </div>
+      <div class="card-body">
+        <div class="data-source-grid" id="dataSourceGrid">
+          <div class="spinner-container"><div class="spinner spinner-sm"></div><div class="spinner-text">检测中...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Local Cache Status -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-hard-drive"></i> 本地缓存状态
+      </div>
+      <div class="card-body">
+        <table class="cache-table" id="cacheTable">
+          <tr><td>缓存状态</td><td id="cacheHasCache">--</td></tr>
+          <tr><td>最后更新时间</td><td id="cacheLastUpdate">--</td></tr>
+          <tr><td>数据新鲜度</td><td id="cacheDataAge">--</td></tr>
+          <tr><td>缓存大小</td><td id="cacheSize">--</td></tr>
+        </table>
+        <div class="divider"></div>
+        <div id="cacheYears" style="font-size:var(--font-size-sm); color:var(--text-secondary);"></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-screwdriver-wrench"></i> 数据操作
+      </div>
+      <div class="card-body" style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="refreshData()"><i class="fa-solid fa-arrows-rotate"></i> 手动刷新数据</button>
+        <button class="btn btn-outline" onclick="exportCacheStatus()"><i class="fa-solid fa-file-export"></i> 导出缓存状态</button>
+        <button class="btn btn-danger" onclick="clearLocalCache()"><i class="fa-solid fa-trash-can"></i> 清空本地缓存</button>
+      </div>
+    </div>
+
+    <!-- Direct Data Links -->
+    <div class="card">
+      <div class="card-header">
+        <i class="fa-solid fa-link"></i> 官方数据源直达
+      </div>
+      <div class="card-body" id="dataLinks">
+        <a class="data-link-item" href="https://zyfz.gxeea.cn/" target="_blank" rel="noopener">
+          <span class="dl-icon"><i class="fa-solid fa-building-columns"></i></span>
+          <span class="dl-info">
+            <span class="dl-name">广西招生考试院</span>
+            <span class="dl-desc">官方志愿填报系统 - 查投档线、录取结果</span>
+          </span>
+          <span class="dl-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+        <a class="data-link-item" href="https://gaokao.chsi.com.cn/" target="_blank" rel="noopener">
+          <span class="dl-icon"><i class="fa-solid fa-sun"></i></span>
+          <span class="dl-info">
+            <span class="dl-name">阳光高考</span>
+            <span class="dl-desc">教育部官方高考平台 - 院校库、专业库查询</span>
+          </span>
+          <span class="dl-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+        <a class="data-link-item" href="https://vt.quark.cn/blm/pc-gaokao-1089/index" target="_blank" rel="noopener">
+          <span class="dl-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span>
+          <span class="dl-info">
+            <span class="dl-name">夸克高考</span>
+            <span class="dl-desc">AI志愿填报 - 查学校录取概率、专业前景</span>
+          </span>
+          <span class="dl-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="text-center" style="padding:16px; color:var(--text-muted); font-size:var(--font-size-xs);">
+      <p>由于CORS跨域限制，本工具无法从官方站点实时拉取数据。</p>
+      <p>当前使用静态部署的本地缓存数据进行计算，建议定期访问官方源确认最新信息。</p>
+    </div>
+
+  </main>
+
+  <!-- Settings Modal -->
+  <div id="settingsOverlay" class="modal-overlay hidden" onclick="closeSettingsOutside(event)">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <span class="modal-title"><i class="fa-solid fa-gear"></i> 设置</span>
+        <button class="modal-close" onclick="closeSettings()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">DeepSeek API Key</label>
+          <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-...">
+          <span class="form-hint">获取地址：<a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeSettings()">取消</button>
+        <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../config.js"></script>
+  <script src="../src/data-engine/score-rank-convert.js"></script>
+  <script src="../src/data-engine/data-filter.js"></script>
+  <script src="../src/data-engine/rank-cache.js"></script>
+  <script src="../src/api/data-fetcher.js"></script>
+  <script src="../src/api/network-status.js"></script>
+
+  <script>
+  // ==================== Toast ====================
+  function showToast(msg, type) {
+    var container = document.querySelector('.toast-container');
+    if (!container) { container = document.createElement('div'); container.className = 'toast-container'; document.body.appendChild(container); }
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + (type || 'info');
+    var icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+    toast.innerHTML = '<span class="toast-icon"><i class="fa-solid ' + icon + '"></i></span><div class="toast-body"><div class="toast-message">' + msg + '</div></div>';
+    container.appendChild(toast);
+    setTimeout(function() { toast.classList.add('removing'); setTimeout(function() { toast.remove(); if (container.children.length === 0) container.remove(); }, 300); }, 3000);
+  }
+
+  // ==================== Settings Modal ====================
+  function openSettings() { document.getElementById('settingsOverlay').classList.remove('hidden'); loadApiKey(); }
+  function closeSettings() { document.getElementById('settingsOverlay').classList.add('hidden'); }
+  function closeSettingsOutside(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
+  function loadApiKey() { var enc = localStorage.getItem('gx_deepseek_api_key'); if (enc) document.getElementById('apiKeyInput').value = atob(enc); }
+  function saveSettings() {
+    var key = document.getElementById('apiKeyInput').value.trim();
+    if (key) { localStorage.setItem('gx_deepseek_api_key', btoa(key)); showToast('API Key 已保存', 'success'); }
+    else { localStorage.removeItem('gx_deepseek_api_key'); showToast('API Key 已清除', 'info'); }
+    closeSettings();
+  }
+
+  // ==================== Data Source Status ====================
+  function renderDataSourceStatus() {
+    var grid = document.getElementById('dataSourceGrid');
+    var sources = [
+      { name: '广西招生考试院', url: 'https://zyfz.gxeea.cn/', icon: 'fa-building-columns', type: 'official' },
+      { name: '阳光高考', url: 'https://gaokao.chsi.com.cn/', icon: 'fa-sun', type: 'official' },
+      { name: '夸克高考', url: 'https://vt.quark.cn/', icon: 'fa-magnifying-glass-chart', type: 'auxiliary' }
+    ];
+
+    var isOnline = navigator.onLine;
+
+    var html = '';
+    sources.forEach(function(src) {
+      var statusCls = isOnline ? 'online' : 'offline';
+      var statusText = isOnline ? '可访问' : '离线';
+      var noteText = isOnline ? '静态部署，使用缓存数据' : '无法连接互联网';
+
+      // If DataFetcher is available, use its info
+      if (window.DataFetcher && window.DataFetcher.DATA_SOURCES) {
+        var ds = window.DataFetcher.DATA_SOURCES.find(function(d) { return d.name === src.name; });
+        if (ds) {
+          src.url = ds.url;
+          noteText = 'CORS限制，使用本地缓存';
+        }
+      }
+
+      html += '<div class="ds-card ' + statusCls + '">';
+      html += '<div class="ds-icon"><i class="fa-solid ' + src.icon + '"></i></div>';
+      html += '<div class="ds-name">' + src.name + '</div>';
+      html += '<span class="ds-status ' + statusCls + '">' + statusText + '</span>';
+      html += '<div class="ds-note">' + noteText + '</div>';
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+  }
+
+  // ==================== Cache Status ====================
+  function renderCacheStatus() {
+    var status;
+    if (window.RankCache && window.RankCache.getCacheStatus) {
+      status = window.RankCache.getCacheStatus();
+    } else {
+      status = getSimpleCacheStatus();
+    }
+
+    document.getElementById('cacheHasCache').textContent = status.hasCache ? '已有缓存' : '无缓存';
+    document.getElementById('cacheHasCache').style.color = status.hasCache ? 'var(--success)' : 'var(--danger)';
+    document.getElementById('cacheLastUpdate').textContent = status.lastUpdate || '从未';
+    document.getElementById('cacheDataAge').textContent = status.dataAge || '--';
+    document.getElementById('cacheSize').textContent = status.cacheSize || '--';
+
+    // Show cached years
+    var yearsDiv = document.getElementById('cacheYears');
+    if (status.hasCache) {
+      var years = [];
+      try {
+        var raw = localStorage.getItem('gx_gaokao_cache');
+        if (raw) {
+          var cache = JSON.parse(raw);
+          if (cache.guangxi_2023) years.push('2023年');
+          if (cache.guangxi_2024) years.push('2024年');
+          if (cache.guangxi_2025) years.push('2025年');
+          if (cache.schools) years.push('院校库');
+        }
+      } catch(e) {}
+      yearsDiv.innerHTML = years.length > 0
+        ? '<strong>已缓存年份：</strong>' + years.join('、')
+        : '<span style="color:var(--text-muted)">未检测到年份数据</span>';
+    } else {
+      yearsDiv.innerHTML = '<span style="color:var(--text-muted)">暂无本地缓存数据</span>';
+    }
+  }
+
+  function getSimpleCacheStatus() {
+    var ts = localStorage.getItem('gx_gaokao_cache_ts');
+    var cache = localStorage.getItem('gx_gaokao_cache');
+    return {
+      hasCache: !!cache,
+      lastUpdate: ts || '从未',
+      dataAge: ts ? Math.floor((Date.now() - new Date(ts).getTime()) / 3600000) + '小时' : '无',
+      cacheSize: cache ? (cache.length / 1024).toFixed(1) + ' KB' : '0 KB'
+    };
+  }
+
+  // ==================== Actions ====================
+  function refreshData() {
+    showToast('正在尝试刷新数据...', 'info');
+
+    // Try using DataFetcher
+    if (window.DataFetcher && window.DataFetcher.fetchLatestData) {
+      window.DataFetcher.fetchLatestData().then(function(result) {
+        if (result.online) {
+          showToast('数据已刷新（使用本地缓存）', 'success');
+        } else {
+          showToast('离线状态，无法获取最新数据', 'warning');
+        }
+        renderDataSourceStatus();
+        renderCacheStatus();
+      }).catch(function() {
+        showToast('数据刷新失败（CORS限制）', 'error');
+      });
+    } else {
+      // Simulated refresh
+      setTimeout(function() {
+        if (!navigator.onLine) {
+          showToast('当前离线，无法刷新数据', 'warning');
+        } else {
+          showToast('静态部署模式，数据已是最新缓存', 'info');
+        }
+        renderDataSourceStatus();
+        renderCacheStatus();
+      }, 500);
+    }
+  }
+
+  function clearLocalCache() {
+    if (!confirm('确定要清空所有本地缓存数据吗？\n\n这将删除已缓存的院校数据和历年投档数据。\n下次使用需要重新加载数据。')) return;
+
+    try {
+      // Clear rank cache
+      if (window.RankCache && window.RankCache.clearCache) {
+        window.RankCache.clearCache();
+      }
+      // Clear all gx_ prefixed localStorage
+      var keysToRemove = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (key && key.startsWith('gx_') && key !== 'gx_student_profile' && key !== 'gx_deepseek_api_key' && key !== 'gx_active_role') {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+
+      showToast('本地缓存已清空', 'success');
+    } catch(e) {
+      showToast('清空缓存失败: ' + e.message, 'error');
+    }
+    renderCacheStatus();
+  }
+
+  function exportCacheStatus() {
+    var status = getSimpleCacheStatus();
+
+    // Get more details
+    var details = {
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      online: navigator.onLine,
+      cacheStatus: status
+    };
+
+    // Add conversation info if available
+    if (window.ConversationStore && window.ConversationStore.getAllConversations) {
+      details.conversations = window.ConversationStore.getAllConversations();
+    }
+
+    var profile = null;
+    try { profile = JSON.parse(localStorage.getItem('gx_student_profile')); } catch(e) {}
+    if (profile) {
+      details.profile = { totalScore: profile.totalScore, rank: profile.rank, birthPlace: profile.birthPlace };
+    }
+
+    var text = JSON.stringify(details, null, 2);
+    var blob = new Blob([text], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'gaokao-cache-status-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+
+    showToast('缓存状态已导出', 'success');
+  }
+
+  // ==================== Offline Indicator ====================
+  function updateOfflineIndicator() {
+    var indicator = document.getElementById('offlineIndicator');
+    if (navigator.onLine) {
+      indicator.classList.remove('show');
+    } else {
+      indicator.classList.add('show');
+    }
+  }
+
+  // Listen for network changes
+  if (window.NetworkStatus && window.NetworkStatus.onNetworkChange) {
+    window.NetworkStatus.onNetworkChange(function(online) {
+      updateOfflineIndicator();
+      renderDataSourceStatus();
+    });
+  }
+
+  window.addEventListener('online', function() {
+    updateOfflineIndicator();
+    renderDataSourceStatus();
+    showToast('网络已恢复', 'success');
+  });
+
+  window.addEventListener('offline', function() {
+    updateOfflineIndicator();
+    renderDataSourceStatus();
+    showToast('网络已断开，使用离线模式', 'warning');
+  });
+
+  // ==================== Init ====================
+  document.addEventListener('DOMContentLoaded', function() {
+    updateOfflineIndicator();
+    renderDataSourceStatus();
+    renderCacheStatus();
+    loadApiKey();
+
+    // Try to init cache if available
+    if (window.RankCache && window.RankCache.initCache) {
+      window.RankCache.initCache().then(function() {
+        renderCacheStatus();
+      }).catch(function() {
+        // ignore
+      });
+    }
+  });
+  </script>
+</body>
+</html>

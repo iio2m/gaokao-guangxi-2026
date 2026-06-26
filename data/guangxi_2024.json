@@ -1,0 +1,605 @@
+{
+  "year": 2024,
+  "province": "广西",
+  "examType": "物理类",
+  "本科线": 355,
+  "特控线": 475,
+  "source": "基于广西招生考试院公开数据估算",
+  "records": [
+    {
+      "schoolId": "gx-001",
+      "schoolName": "广西科技大学",
+      "minScore": 472,
+      "minRank": 74000,
+      "enrollment": 183
+    },
+    {
+      "schoolId": "gx-002",
+      "schoolName": "桂林电子科技大学",
+      "minScore": 525,
+      "minRank": 43500,
+      "enrollment": 263
+    },
+    {
+      "schoolId": "gx-003",
+      "schoolName": "桂林理工大学",
+      "minScore": 510,
+      "minRank": 49500,
+      "enrollment": 223
+    },
+    {
+      "schoolId": "gx-004",
+      "schoolName": "南宁师范大学",
+      "minScore": 487,
+      "minRank": 63800,
+      "enrollment": 203
+    },
+    {
+      "schoolId": "gx-005",
+      "schoolName": "广西民族大学",
+      "minScore": 494,
+      "minRank": 59500,
+      "enrollment": 193
+    },
+    {
+      "schoolId": "gx-006",
+      "schoolName": "玉林师范学院",
+      "minScore": 452,
+      "minRank": 83800,
+      "enrollment": 223
+    },
+    {
+      "schoolId": "gx-007",
+      "schoolName": "河池学院",
+      "minScore": 435,
+      "minRank": 94000,
+      "enrollment": 183
+    },
+    {
+      "schoolId": "gx-008",
+      "schoolName": "百色学院",
+      "minScore": 430,
+      "minRank": 96000,
+      "enrollment": 193
+    },
+    {
+      "schoolId": "gx-009",
+      "schoolName": "梧州学院",
+      "minScore": 439,
+      "minRank": 89800,
+      "enrollment": 188
+    },
+    {
+      "schoolId": "gx-010",
+      "schoolName": "贺州学院",
+      "minScore": 432,
+      "minRank": 95000,
+      "enrollment": 178
+    },
+    {
+      "schoolId": "gx-011",
+      "schoolName": "北部湾大学",
+      "minScore": 445,
+      "minRank": 86800,
+      "enrollment": 203
+    },
+    {
+      "schoolId": "gx-012",
+      "schoolName": "广西科技师范学院",
+      "minScore": 422,
+      "minRank": 100000,
+      "enrollment": 173
+    },
+    {
+      "schoolId": "gx-013",
+      "schoolName": "广西民族师范学院",
+      "minScore": 417,
+      "minRank": 102000,
+      "enrollment": 168
+    },
+    {
+      "schoolId": "gx-014",
+      "schoolName": "桂林航天工业学院",
+      "minScore": 501,
+      "minRank": 54500,
+      "enrollment": 198
+    },
+    {
+      "schoolId": "gx-015",
+      "schoolName": "广西财经学院",
+      "minScore": 481,
+      "minRank": 66500,
+      "enrollment": 198
+    },
+    {
+      "schoolId": "gx-016",
+      "schoolName": "广西师范大学",
+      "minScore": 510,
+      "minRank": 49300,
+      "enrollment": 243
+    },
+    {
+      "schoolId": "gx-017",
+      "schoolName": "广西中医药大学",
+      "minScore": 492,
+      "minRank": 61500,
+      "enrollment": 183
+    },
+    {
+      "schoolId": "gx-018",
+      "schoolName": "桂林医学院",
+      "minScore": 499,
+      "minRank": 56500,
+      "enrollment": 188
+    },
+    {
+      "schoolId": "gx-019",
+      "schoolName": "右江民族医学院",
+      "minScore": 475,
+      "minRank": 71800,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gx-020",
+      "schoolName": "广西医科大学",
+      "minScore": 535,
+      "minRank": 39200,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gx-021",
+      "schoolName": "广西警察学院",
+      "minScore": 457,
+      "minRank": 81800,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gx-022",
+      "schoolName": "桂林旅游学院",
+      "minScore": 417,
+      "minRank": 102200,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gx-023",
+      "schoolName": "广西职业师范学院",
+      "minScore": 412,
+      "minRank": 104000,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "gx-024",
+      "schoolName": "广西农业职业技术大学",
+      "minScore": 407,
+      "minRank": 105000,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gx-025",
+      "schoolName": "广西科技大学",
+      "minScore": 466,
+      "minRank": 75500,
+      "enrollment": 178
+    },
+    {
+      "schoolId": "gd-001",
+      "schoolName": "广东石油化工学院",
+      "minScore": 462,
+      "minRank": 79800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gd-002",
+      "schoolName": "岭南师范学院",
+      "minScore": 445,
+      "minRank": 86800,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "gd-003",
+      "schoolName": "惠州学院",
+      "minScore": 478,
+      "minRank": 69500,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gd-004",
+      "schoolName": "五邑大学",
+      "minScore": 487,
+      "minRank": 63500,
+      "enrollment": 173
+    },
+    {
+      "schoolId": "gd-005",
+      "schoolName": "佛山大学",
+      "minScore": 499,
+      "minRank": 56300,
+      "enrollment": 168
+    },
+    {
+      "schoolId": "gd-006",
+      "schoolName": "韶关学院",
+      "minScore": 439,
+      "minRank": 89800,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "gd-007",
+      "schoolName": "嘉应学院",
+      "minScore": 437,
+      "minRank": 91800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gd-008",
+      "schoolName": "韩山师范学院",
+      "minScore": 435,
+      "minRank": 93800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gd-009",
+      "schoolName": "肇庆学院",
+      "minScore": 443,
+      "minRank": 87800,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "gd-010",
+      "schoolName": "广东技术师范大学",
+      "minScore": 494,
+      "minRank": 59300,
+      "enrollment": 173
+    },
+    {
+      "schoolId": "gd-011",
+      "schoolName": "仲恺农业工程学院",
+      "minScore": 481,
+      "minRank": 66500,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gd-012",
+      "schoolName": "广东海洋大学",
+      "minScore": 475,
+      "minRank": 71500,
+      "enrollment": 178
+    },
+    {
+      "schoolId": "gd-013",
+      "schoolName": "东莞理工学院",
+      "minScore": 507,
+      "minRank": 51300,
+      "enrollment": 168
+    },
+    {
+      "schoolId": "gd-014",
+      "schoolName": "广东第二师范学院",
+      "minScore": 466,
+      "minRank": 76500,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "gd-015",
+      "schoolName": "广东药科大学",
+      "minScore": 492,
+      "minRank": 61500,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gd-016",
+      "schoolName": "广州航海学院",
+      "minScore": 472,
+      "minRank": 73500,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "hn-001",
+      "schoolName": "湖南工程学院",
+      "minScore": 472,
+      "minRank": 73800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "hn-002",
+      "schoolName": "邵阳学院",
+      "minScore": 439,
+      "minRank": 90000,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "hn-003",
+      "schoolName": "怀化学院",
+      "minScore": 430,
+      "minRank": 95800,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "hn-004",
+      "schoolName": "湖南科技学院",
+      "minScore": 437,
+      "minRank": 92000,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "hn-005",
+      "schoolName": "湘南学院",
+      "minScore": 435,
+      "minRank": 94000,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "hn-006",
+      "schoolName": "湖南工学院",
+      "minScore": 452,
+      "minRank": 83800,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "hn-007",
+      "schoolName": "湖南城市学院",
+      "minScore": 443,
+      "minRank": 88000,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "hn-008",
+      "schoolName": "湖南人文科技学院",
+      "minScore": 427,
+      "minRank": 97000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "hn-009",
+      "schoolName": "衡阳师范学院",
+      "minScore": 447,
+      "minRank": 85800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "hn-010",
+      "schoolName": "长沙学院",
+      "minScore": 475,
+      "minRank": 71500,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "hn-011",
+      "schoolName": "湖南理工学院",
+      "minScore": 478,
+      "minRank": 69500,
+      "enrollment": 163
+    },
+    {
+      "schoolId": "gz-001",
+      "schoolName": "贵州理工学院",
+      "minScore": 462,
+      "minRank": 79800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gz-002",
+      "schoolName": "遵义师范学院",
+      "minScore": 439,
+      "minRank": 90000,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "gz-003",
+      "schoolName": "六盘水师范学院",
+      "minScore": 425,
+      "minRank": 98000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "gz-004",
+      "schoolName": "贵州工程应用技术学院",
+      "minScore": 422,
+      "minRank": 100000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "gz-005",
+      "schoolName": "凯里学院",
+      "minScore": 417,
+      "minRank": 102000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "gz-006",
+      "schoolName": "安顺学院",
+      "minScore": 412,
+      "minRank": 104000,
+      "enrollment": 143
+    },
+    {
+      "schoolId": "gz-007",
+      "schoolName": "铜仁学院",
+      "minScore": 417,
+      "minRank": 102000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "gz-008",
+      "schoolName": "黔南民族师范学院",
+      "minScore": 422,
+      "minRank": 100000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "gz-009",
+      "schoolName": "贵阳学院",
+      "minScore": 452,
+      "minRank": 83800,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "yn-001",
+      "schoolName": "玉溪师范学院",
+      "minScore": 439,
+      "minRank": 90000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "yn-002",
+      "schoolName": "曲靖师范学院",
+      "minScore": 437,
+      "minRank": 92000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "yn-003",
+      "schoolName": "红河学院",
+      "minScore": 425,
+      "minRank": 98000,
+      "enrollment": 143
+    },
+    {
+      "schoolId": "yn-004",
+      "schoolName": "文山学院",
+      "minScore": 412,
+      "minRank": 104000,
+      "enrollment": 143
+    },
+    {
+      "schoolId": "yn-005",
+      "schoolName": "楚雄师范学院",
+      "minScore": 430,
+      "minRank": 96000,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "yn-006",
+      "schoolName": "保山学院",
+      "minScore": 417,
+      "minRank": 102000,
+      "enrollment": 143
+    },
+    {
+      "schoolId": "yn-007",
+      "schoolName": "普洱学院",
+      "minScore": 409,
+      "minRank": 106000,
+      "enrollment": 143
+    },
+    {
+      "schoolId": "yn-008",
+      "schoolName": "昭通学院",
+      "minScore": 407,
+      "minRank": 107000,
+      "enrollment": 141
+    },
+    {
+      "schoolId": "js-001",
+      "schoolName": "江苏理工学院",
+      "minScore": 457,
+      "minRank": 81800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "js-002",
+      "schoolName": "盐城工学院",
+      "minScore": 449,
+      "minRank": 84800,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "js-003",
+      "schoolName": "徐州工程学院",
+      "minScore": 445,
+      "minRank": 86800,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "zj-001",
+      "schoolName": "台州学院",
+      "minScore": 452,
+      "minRank": 83800,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "zj-002",
+      "schoolName": "嘉兴大学",
+      "minScore": 466,
+      "minRank": 76300,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "jx-001",
+      "schoolName": "九江学院",
+      "minScore": 427,
+      "minRank": 96800,
+      "enrollment": 148
+    },
+    {
+      "schoolId": "jx-002",
+      "schoolName": "宜春学院",
+      "minScore": 422,
+      "minRank": 100000,
+      "enrollment": 145
+    },
+    {
+      "schoolId": "jx-003",
+      "schoolName": "井冈山大学",
+      "minScore": 437,
+      "minRank": 92000,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "hb-001",
+      "schoolName": "湖北工程学院",
+      "minScore": 445,
+      "minRank": 86800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "hb-002",
+      "schoolName": "湖北科技学院",
+      "minScore": 439,
+      "minRank": 89800,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "hb-003",
+      "schoolName": "湖北理工学院",
+      "minScore": 449,
+      "minRank": 84800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "ha-001",
+      "schoolName": "河南工程学院",
+      "minScore": 457,
+      "minRank": 81800,
+      "enrollment": 158
+    },
+    {
+      "schoolId": "ha-002",
+      "schoolName": "洛阳理工学院",
+      "minScore": 449,
+      "minRank": 84800,
+      "enrollment": 153
+    },
+    {
+      "schoolId": "ha-003",
+      "schoolName": "安阳工学院",
+      "minScore": 437,
+      "minRank": 92000,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "ah-001",
+      "schoolName": "滁州学院",
+      "minScore": 427,
+      "minRank": 96800,
+      "enrollment": 151
+    },
+    {
+      "schoolId": "ah-002",
+      "schoolName": "宿州学院",
+      "minScore": 417,
+      "minRank": 102000,
+      "enrollment": 148
+    }
+  ]
+}

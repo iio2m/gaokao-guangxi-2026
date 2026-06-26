@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI多角色对话 - 广西高考志愿填报咨询">
+  <title>AI对话 - 广西2026高考志愿填报助手</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Chat page layout */
+    .chat-layout { display: flex; min-height: calc(100vh - var(--header-height)); }
+    .chat-sidebar {
+      width: 220px; min-width: 220px; background: var(--card-bg);
+      border-right: 1px solid var(--border-light); padding: 12px 8px;
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+    .chat-sidebar .sidebar-label {
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      color: var(--text-muted); padding: 4px 8px 8px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .role-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 10px 12px; border: none; border-radius: var(--radius-sm);
+      background: transparent; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+      cursor: pointer; text-align: left; color: var(--text-primary); transition: all 0.15s; margin-bottom: 2px;
+    }
+    .role-btn:hover { background: var(--bg-secondary); }
+    .role-btn.active { background: var(--primary-light); color: var(--primary); font-weight: var(--font-weight-semibold); }
+    .role-btn .role-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; flex-shrink: 0; }
+    .role-icon-red { background: #E74C3C; }
+    .role-icon-blue { background: #3498DB; }
+    .role-icon-green { background: #2ECC71; }
+    .role-icon-orange { background: #F39C12; }
+    .role-icon-purple { background: linear-gradient(135deg, #8E44AD, #9B59B6); }
+    .role-btn .role-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+    .chat-msg { display: flex; gap: 10px; max-width: 100%; animation: messageSlideIn 0.3s ease; }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-msg .msg-avatar {
+      width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0; color: #fff; font-weight: var(--font-weight-bold);
+    }
+    .chat-msg.ai .msg-avatar { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+    .chat-msg.user .msg-avatar { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); }
+    .chat-msg .msg-body { max-width: 75%; }
+    .chat-msg .msg-header { font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: 3px; }
+    .chat-msg .msg-bubble {
+      padding: 10px 14px; border-radius: var(--radius-md); font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed); word-break: break-word;
+    }
+    .chat-msg.ai .msg-bubble { background: var(--card-bg); border: 1px solid var(--border-light); border-top-left-radius: var(--radius-xs); }
+    .chat-msg.user .msg-bubble { background: var(--primary-light); color: var(--text-primary); border-top-right-radius: var(--radius-xs); }
+    .chat-msg .msg-bubble p { margin-bottom: 6px; font-size: var(--font-size-base); }
+    .chat-msg .msg-bubble p:last-child { margin-bottom: 0; }
+    .chat-msg .msg-bubble ul, .chat-msg .msg-bubble ol { padding-left: 20px; margin-bottom: 6px; }
+    .chat-msg .msg-bubble li { margin-bottom: 2px; }
+    .chat-msg .msg-bubble strong { font-weight: var(--font-weight-semibold); }
+    .chat-msg .msg-bubble em { font-style: italic; }
+    .chat-msg .msg-bubble table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: var(--font-size-sm); }
+    .chat-msg .msg-bubble table th, .chat-msg .msg-bubble table td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+    .chat-msg .msg-bubble table th { background: var(--bg-secondary); font-weight: var(--font-weight-semibold); }
+    .chat-msg .msg-bubble code { background: var(--bg); padding: 2px 6px; border-radius: 3px; font-size: 0.9em; font-family: var(--font-mono); }
+    .chat-msg .msg-bubble pre { background: var(--bg); padding: 10px; border-radius: var(--radius-sm); overflow-x: auto; font-size: var(--font-size-sm); margin: 8px 0; }
+    .typing-box {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      color: var(--text-muted); font-size: var(--font-size-sm);
+    }
+    .typing-box .dots { display: flex; gap: 4px; }
+    .typing-box .dots span {
+      width: 7px; height: 7px; background: var(--text-muted); border-radius: 50%;
+      animation: typingBounce 1.4s infinite ease-in-out;
+    }
+    .typing-box .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-box .dots span:nth-child(3) { animation-delay: 0.4s; }
+    /* Input area */
+    .chat-input-wrap { padding: 12px 16px; border-top: 1px solid var(--border-light); background: var(--card-bg); display: flex; gap: 10px; align-items: flex-end; }
+    .chat-input-wrap textarea {
+      flex: 1; padding: 10px 16px; border: 1px solid var(--border); border-radius: 22px; font-size: var(--font-size-base);
+      resize: none; min-height: 42px; max-height: 130px; line-height: 1.4; font-family: inherit;
+      outline: none; transition: border-color var(--transition-fast);
+    }
+    .chat-input-wrap textarea:focus { border-color: var(--primary); }
+    .chat-input-wrap .send-btn {
+      width: 44px; height: 44px; border-radius: 50%; border: none; background: var(--primary);
+      color: #fff; font-size: 18px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      transition: all var(--transition-fast);
+    }
+    .chat-input-wrap .send-btn:hover { background: var(--primary-dark); }
+    .chat-input-wrap .send-btn:disabled { background: #ccc; cursor: not-allowed; }
+    /* Floating profile card */
+    .profile-float {
+      background: var(--card-bg); border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
+      padding: 12px 14px; margin-bottom: 10px; border: 1px solid var(--border-light); font-size: var(--font-size-xs);
+    }
+    .profile-float .pf-title { font-weight: var(--font-weight-semibold); color: var(--primary); margin-bottom: 4px; }
+    .profile-float .pf-row { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 2px; color: var(--text-secondary); }
+    .profile-float .pf-val { font-weight: var(--font-weight-medium); color: var(--text-primary); }
+    /* Welcome */
+    .welcome-box {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 60px 20px; color: var(--text-muted);
+    }
+    .welcome-box .welcome-icon { font-size: 52px; margin-bottom: 14px; }
+    .welcome-box h3 { margin-bottom: 6px; color: var(--text-secondary); }
+    .welcome-box p { font-size: var(--font-size-sm); max-width: 420px; }
+    /* Mobile */
+    @media (max-width: 768px) {
+      .chat-layout { flex-direction: column; }
+      .chat-sidebar {
+        width: 100%; min-width: auto; flex-direction: row; overflow-x: auto;
+        padding: 8px; border-right: none; border-bottom: 1px solid var(--border-light);
+        gap: 4px; -webkit-overflow-scrolling: touch;
+      }
+      .chat-sidebar .sidebar-label { display: none; }
+      .role-btn { width: auto; flex-shrink: 0; padding: 6px 10px; font-size: var(--font-size-xs); white-space: nowrap; margin-bottom: 0; }
+      .role-btn .role-icon { width: 22px; height: 22px; font-size: 11px; }
+      .chat-msg .msg-body { max-width: 88%; }
+      .chat-main .profile-float { margin: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="btn-icon" onclick="window.location.href='../index.html'" title="返回"><i class="fa-solid fa-arrow-left"></i></button>
+      <span class="header-title"><i class="fa-solid fa-comments"></i> AI对话咨询</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-icon" onclick="clearCurrentChat()" title="清空对话"><i class="fa-solid fa-trash-can"></i></button>
+      <button class="btn-icon" onclick="openSettings()" title="设置"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </header>
+
+  <div class="chat-layout">
+
+    <!-- Sidebar - Role List -->
+    <div class="chat-sidebar">
+      <div class="sidebar-label">AI 角色</div>
+      <button class="role-btn active" data-role="zhangxuefeng" onclick="switchActiveRole('zhangxuefeng')">
+        <span class="role-icon role-icon-red">ZX</span>
+        <span class="role-name">张雪峰咨询师</span>
+      </button>
+      <button class="role-btn" data-role="policy-expert" onclick="switchActiveRole('policy-expert')">
+        <span class="role-icon role-icon-blue">ZC</span>
+        <span class="role-name">政策解读官</span>
+      </button>
+      <button class="role-btn" data-role="engineering-analyst" onclick="switchActiveRole('engineering-analyst')">
+        <span class="role-icon role-icon-green">GH</span>
+        <span class="role-name">工科规划师</span>
+      </button>
+      <button class="role-btn" data-role="data-calculator" onclick="switchActiveRole('data-calculator')">
+        <span class="role-icon role-icon-orange">CS</span>
+        <span class="role-name">数据测算师</span>
+      </button>
+      <button class="role-btn" data-role="group" onclick="switchActiveRole('group')">
+        <span class="role-icon role-icon-purple"><i class="fa-solid fa-users"></i></span>
+        <span class="role-name">群聊模式</span>
+      </button>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-main">
+      <!-- Floating Profile -->
+      <div class="profile-float" id="profileFloat">
+        <div class="pf-title"><i class="fa-solid fa-id-card"></i> 考生信息</div>
+        <div class="pf-row"><span>总分</span><span class="pf-val" id="pfScore">--</span></div>
+        <div class="pf-row"><span>位次</span><span class="pf-val" id="pfRank">--</span></div>
+        <div class="pf-row"><span>生源地</span><span class="pf-val" id="pfPlace">--</span></div>
+      </div>
+
+      <!-- Messages Container -->
+      <div class="chat-messages" id="chatMessages">
+        <div class="welcome-box" id="welcomeBox">
+          <div class="welcome-icon" id="welcomeIcon">🎓</div>
+          <h3 id="welcomeTitle">你好！我是张雪峰咨询师</h3>
+          <p id="welcomeDesc">以张雪峰的视角和你聊，基于就业数据分析，具体填报请以广西考试院官方为准。有什么志愿填报的问题，尽管问我！</p>
+        </div>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div class="typing-box hidden" id="typingIndicator">
+        <span>AI正在思考</span>
+        <span class="dots"><span></span><span></span><span></span></span>
+      </div>
+
+      <!-- Input -->
+      <div class="chat-input-wrap">
+        <textarea id="chatInput" rows="1" placeholder="输入你的问题，Enter发送 / Shift+Enter换行" onkeydown="handleInputKey(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsOverlay" class="modal-overlay hidden" onclick="closeSettingsOutside(event)">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <span class="modal-title"><i class="fa-solid fa-gear"></i> 设置</span>
+        <button class="modal-close" onclick="closeSettings()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">DeepSeek API Key</label>
+          <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-...">
+          <span class="form-hint">获取地址：<a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeSettings()">取消</button>
+        <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../config.js"></script>
+  <script src="../src/data-engine/score-rank-convert.js"></script>
+  <script src="../src/data-engine/data-filter.js"></script>
+  <script src="../src/data-engine/rank-cache.js"></script>
+  <script src="../src/guangxi/weight-adjust.js"></script>
+  <script src="../src/guangxi/risk-assessment.js"></script>
+  <script src="../src/guangxi/chong-wen-bao.js"></script>
+  <script src="../src/agent/conversation-store.js"></script>
+  <script src="../src/agent/deepseek-api.js"></script>
+  <script src="../src/agent/role-manager.js"></script>
+  <script src="../src/api/data-fetcher.js"></script>
+  <script src="../src/api/network-status.js"></script>
+
+  <script>
+  // ==================== Toast ====================
+  function showToast(msg, type) {
+    var container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + (type || 'info');
+    var icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+    toast.innerHTML = '<span class="toast-icon"><i class="fa-solid ' + icon + '"></i></span><div class="toast-body"><div class="toast-message">' + msg + '</div></div>';
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.classList.add('removing');
+      setTimeout(function() { toast.remove(); if (container.children.length === 0) container.remove(); }, 300);
+    }, 3000);
+  }
+
+  // ==================== Role Config ====================
+  var ROLES = {
+    'zhangxuefeng': { name: '张雪峰咨询师', icon: 'fa-graduation-cap', emoji: '🎓', color: '#E74C3C', cls: 'role-icon-red', welcome: '你好！我是张雪峰咨询师', welcomeDesc: '以张雪峰的视角和你聊，基于就业数据分析，具体填报请以广西考试院官方为准。有什么志愿填报的问题，尽管问我！' },
+    'policy-expert': { name: '政策解读官', icon: 'fa-scale-balanced', emoji: '📋', color: '#3498DB', cls: 'role-icon-blue', welcome: '你好！我是广西招生政策解读官', welcomeDesc: '精通2026广西物理类本科普通批全部规则。有任何政策疑问，我来帮你逐条解读。' },
+    'engineering-analyst': { name: '工科规划师', icon: 'fa-microchip', emoji: '⚡', color: '#2ECC71', cls: 'role-icon-green', welcome: '你好！我是工科专业规划师', welcomeDesc: '针对女生、物理短板考生做专业细分规划。帮你分析哪个工科方向最适合你。' },
+    'data-calculator': { name: '数据测算师', icon: 'fa-chart-line', emoji: '📊', color: '#F39C12', cls: 'role-icon-orange', welcome: '你好！我是数据测算分析师', welcomeDesc: '纯数据量化分析，不做主观评价。以表格和数据说话，帮你理性决策。' },
+    'group': { name: '群聊模式', icon: 'fa-users', emoji: '👥', color: '#8E44AD', cls: 'role-icon-purple', welcome: '群聊模式已开启', welcomeDesc: '四位AI角色将依次回答你的问题，综合多角度建议。' }
+  };
+
+  var activeRole = 'zhangxuefeng';
+  var currentMessages = {}; // { roleId: [{role,content}] }
+  var isStreaming = false;
+
+  // ==================== Profile ====================
+  function getProfile() {
+    try { return JSON.parse(localStorage.getItem('gx_student_profile')); } catch(e) { return null; }
+  }
+
+  function updateProfileFloat() {
+    var p = getProfile();
+    document.getElementById('pfScore').textContent = p ? p.totalScore + '分' : '未设置';
+    document.getElementById('pfRank').textContent = p ? p.rank.toLocaleString() : '未设置';
+    document.getElementById('pfPlace').textContent = p ? p.birthPlace : '未设置';
+  }
+
+  // ==================== Role Switching ====================
+  function switchActiveRole(roleId) {
+    activeRole = roleId;
+    // Update sidebar buttons
+    document.querySelectorAll('.role-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.role === roleId);
+    });
+    // Update welcome
+    var r = ROLES[roleId] || ROLES['zhangxuefeng'];
+    document.getElementById('welcomeIcon').textContent = r.emoji;
+    document.getElementById('welcomeTitle').textContent = r.welcome;
+    document.getElementById('welcomeDesc').textContent = r.welcomeDesc;
+    // Load conversation history
+    renderMessages();
+    // Save preference
+    localStorage.setItem('gx_active_role', roleId);
+  }
+
+  function getActiveMessages() {
+    if (!currentMessages[activeRole]) {
+      // Try loading from ConversationStore
+      if (window.ConversationStore) {
+        currentMessages[activeRole] = window.ConversationStore.loadMessages(activeRole) || [];
+      } else {
+        currentMessages[activeRole] = [];
+      }
+    }
+    return currentMessages[activeRole];
+  }
+
+  // ==================== Render Messages ====================
+  function renderMessages() {
+    var container = document.getElementById('chatMessages');
+    var msgs = getActiveMessages();
+    var welcome = document.getElementById('welcomeBox');
+
+    if (msgs.length === 0) {
+      welcome.classList.remove('hidden');
+      // Remove all chat messages
+      container.querySelectorAll('.chat-msg').forEach(function(el) { el.remove(); });
+    } else {
+      welcome.classList.add('hidden');
+      container.querySelectorAll('.chat-msg, .welcome-box').forEach(function(el) { el.remove(); });
+      msgs.forEach(function(msg, i) {
+        appendMessage(msg.role, msg.content, msg.roleId || activeRole, false);
+      });
+      container.appendChild(welcome);
+      welcome.classList.add('hidden');
+    }
+    scrollToBottom();
+  }
+
+  function appendMessage(role, content, roleId, scroll) {
+    var container = document.getElementById('chatMessages');
+    var welcome = document.getElementById('welcomeBox');
+    if (welcome) welcome.classList.add('hidden');
+
+    var roleName = '';
+    var avatarBg = 'var(--primary)';
+    var avatarText = 'AI';
+
+    if (role === 'user') {
+      avatarBg = 'var(--accent)';
+      avatarText = '我';
+    } else if (roleId && ROLES[roleId]) {
+      roleName = ROLES[roleId].name;
+      avatarBg = ROLES[roleId].color;
+      avatarText = ROLES[roleId].name.substring(0, 2);
+    }
+
+    var msgDiv = document.createElement('div');
+    msgDiv.className = 'chat-msg ' + (role === 'user' ? 'user' : 'ai');
+
+    var avatarHtml = '<div class="msg-avatar" style="background:' + avatarBg + '">' + avatarText + '</div>';
+    var headerHtml = '';
+    if (role === 'ai' && roleName) {
+      headerHtml = '<div class="msg-header" style="color:' + (roleId && ROLES[roleId] ? ROLES[roleId].color : 'var(--text-muted)') + '">' + roleName + '</div>';
+    }
+    var contentHtml = '<div class="msg-bubble">' + renderMarkdown(content) + '</div>';
+
+    msgDiv.innerHTML = avatarHtml + '<div class="msg-body">' + headerHtml + contentHtml + '</div>';
+    container.appendChild(msgDiv);
+
+    if (scroll !== false) scrollToBottom();
+    return msgDiv;
+  }
+
+  function renderMarkdown(text) {
+    if (!text) return '';
+    var html = text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      // Bold
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // Italic
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // Inline code
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // Headers
+      .replace(/^### (.+)$/gm, '<h6>$1</h6>')
+      .replace(/^## (.+)$/gm, '<h5>$1</h5>')
+      .replace(/^# (.+)$/gm, '<h4>$1</h4>')
+      // Lists
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+      // Horizontal rules
+      .replace(/^---$/gm, '<hr>')
+      // Paragraphs (double newlines)
+      .replace(/\n\n/g, '</p><p>');
+
+    // Wrap consecutive <li> in <ul>
+    html = html.replace(/((?:<li>.*?<\/li>\n?)+)/g, function(m) { return '<ul>' + m + '</ul>'; });
+    html = '<p>' + html + '</p>';
+    // Clean up empty <p></p>
+    html = html.replace(/<p>\s*<\/p>/g, '');
+    html = html.replace(/<p><ul>/g, '<ul>');
+    html = html.replace(/<\/ul><\/p>/g, '</ul>');
+    html = html.replace(/<p><h[456]>/g, '<$1>');
+    html = html.replace(/<\/h[456]><\/p>/g, '</$1>');
+
+    return html;
+  }
+
+  function scrollToBottom() {
+    var container = document.getElementById('chatMessages');
+    requestAnimationFrame(function() { container.scrollTop = container.scrollHeight; });
+  }
+
+  // ==================== Send Message ====================
+  function sendMessage() {
+    if (isStreaming) return;
+    var input = document.getElementById('chatInput');
+    var content = input.value.trim();
+    if (!content) return;
+
+    var profile = getProfile();
+    if (!profile) {
+      showToast('请先在首页填写考生信息', 'warning');
+      return;
+    }
+
+    input.value = '';
+    input.style.height = 'auto';
+    document.getElementById('sendBtn').disabled = true;
+
+    // Add user message
+    var msgs = getActiveMessages();
+    msgs.push({ role: 'user', content: content, roleId: activeRole });
+    appendMessage('user', content, null);
+    saveCurrentMessages();
+
+    // Show typing indicator
+    document.getElementById('typingIndicator').classList.remove('hidden');
+    scrollToBottom();
+
+    // Handle group chat
+    if (activeRole === 'group') {
+      doGroupChat(content, profile);
+    } else {
+      doSingleChat(content, profile);
+    }
+  }
+
+  function doSingleChat(userContent, profile) {
+    // Build messages array for API
+    var messages = [];
+    var systemPrompt = '';
+    if (window.RoleManager) {
+      systemPrompt = window.RoleManager.getSystemPrompt(activeRole, profile);
+    } else {
+      systemPrompt = getDefaultSystemPrompt(activeRole, profile);
+    }
+    messages.push({ role: 'system', content: systemPrompt });
+
+    var history = getActiveMessages().slice(-20, -1); // exclude the just-added user msg
+    history.forEach(function(m) { messages.push(m); });
+    messages.push({ role: 'user', content: userContent });
+
+    var apiKey = getRawApiKey();
+    if (!apiKey) {
+      // Simulate local response
+      document.getElementById('typingIndicator').classList.add('hidden');
+      var simulated = getSimulatedResponse(activeRole);
+      var msgs = getActiveMessages();
+      msgs.push({ role: 'assistant', content: simulated, roleId: activeRole });
+      saveCurrentMessages();
+      appendMessage('ai', simulated, activeRole);
+      document.getElementById('sendBtn').disabled = false;
+      return;
+    }
+
+    // Use DeepSeek API
+    var fullContent = '';
+    var msgEl = null;
+
+    var doApiCall = function() {
+      if (window.DeepSeekAPI) {
+        window.DeepSeekAPI.sendChatRequest(messages,
+          function(chunk, full) {
+            fullContent = full;
+            if (!msgEl) {
+              msgEl = appendMessage('ai', fullContent, activeRole, false);
+            } else {
+              msgEl.querySelector('.msg-bubble').innerHTML = renderMarkdown(fullContent);
+            }
+            scrollToBottom();
+          },
+          function(full) {
+            // Done
+            document.getElementById('typingIndicator').classList.add('hidden');
+            var msgs = getActiveMessages();
+            msgs.push({ role: 'assistant', content: full, roleId: activeRole });
+            saveCurrentMessages();
+            document.getElementById('sendBtn').disabled = false;
+            if (msgEl) msgEl.querySelector('.msg-bubble').innerHTML = renderMarkdown(full);
+            scrollToBottom();
+          },
+          function(err) {
+            document.getElementById('typingIndicator').classList.add('hidden');
+            showToast('API请求失败: ' + (err.message || '未知错误'), 'error');
+            document.getElementById('sendBtn').disabled = false;
+            if (msgEl) msgEl.remove();
+          }
+        );
+      } else {
+        document.getElementById('typingIndicator').classList.add('hidden');
+        showToast('API模块未加载', 'error');
+        document.getElementById('sendBtn').disabled = false;
+      }
+    };
+    doApiCall();
+  }
+
+  function doGroupChat(userContent, profile) {
+    var roleIds = ['zhangxuefeng', 'policy-expert', 'engineering-analyst', 'data-calculator'];
+
+    if (window.RoleManager && window.RoleManager.groupChat) {
+      window.RoleManager.groupChat(roleIds, getActiveMessages(), userContent, profile,
+        function(roleId, chunk, full) {
+          // This is called per role, but we need to handle differently
+          // For simplicity, append each role's full response
+        }
+      );
+      // Simplified: do them sequentially with simulated responses
+      document.getElementById('typingIndicator').classList.add('hidden');
+      roleIds.forEach(function(rid, idx) {
+        setTimeout(function() {
+          var r = ROLES[rid] || {};
+          var response = getSimulatedResponseForRole(rid);
+          appendMessage('ai', '【' + (r.name || rid) + '】\n\n' + response, rid);
+          var msgs = getActiveMessages();
+          msgs.push({ role: 'assistant', content: response, roleId: rid });
+          saveCurrentMessages();
+          if (idx === roleIds.length - 1) {
+            document.getElementById('sendBtn').disabled = false;
+          }
+        }, idx * 200);
+      });
+    } else {
+      document.getElementById('typingIndicator').classList.add('hidden');
+      showToast('群聊模式需要API Key配置（离线模式下逐个角色回复）', 'info');
+      roleIds.forEach(function(rid, idx) {
+        setTimeout(function() {
+          var r = ROLES[rid] || {};
+          var response = getSimulatedResponseForRole(rid);
+          appendMessage('ai', '【' + (r.name || rid) + '】\n\n' + response, rid);
+          document.getElementById('sendBtn').disabled = false;
+        }, idx * 300);
+      });
+    }
+  }
+
+  function getRawApiKey() {
+    var encoded = localStorage.getItem('gx_deepseek_api_key');
+    return encoded ? atob(encoded) : null;
+  }
+
+  function getDefaultSystemPrompt(roleId, profile) {
+    var pt = '';
+    if (profile) {
+      pt = '考生信息：总分' + profile.totalScore + '分，位次' + profile.rank + '，生源地' + (profile.birthPlace || '广西') + '，性别' + (profile.gender || '女') + '，选科物理类。';
+    }
+    var prompts = {
+      'zhangxuefeng': '你是张雪峰风格高考志愿咨询师。说话务实直白。' + pt + '从就业性价比分析，分地域对比，贴合工薪家庭。',
+      'policy-expert': '你是广西招生考试院政策解读专员。' + pt + '以官方规则为准解读，给出明确操作建议。',
+      'engineering-analyst': '你是工科专业规划师。' + pt + '针对女生和物理短板分析专业合适度，给出学习建议。',
+      'data-calculator': '你是数据测算师。' + pt + '仅输出客观数据，不做主观评价，以表格形式呈现。'
+    };
+    return prompts[roleId] || prompts['zhangxuefeng'];
+  }
+
+  function getSimulatedResponse(roleId) {
+    var responses = {
+      'zhangxuefeng': '在没有API Key的情况下，我暂时无法进行实时AI对话。\n\n不过你可以先看看这些建议：\n- 489分在广西属于二本区间，位次76054\n- 优先考虑**广西区内公办院校**，学费低、就业有保障\n- 物理50分偏弱，建议避开强物理依赖的专业（如重型机械、土木）\n- 英语113分是优势，可以考虑自动化、测控等弱电方向\n\n配置DeepSeek API Key后可以获得更详细的分析！',
+      'policy-expert': '未能连接到AI服务。\n\n广西2026平行志愿核心规则回顾：\n- **分数优先、遵循志愿、一次投档**\n- 物理类本科普通批可填多个院校志愿\n- 服从调剂在同专业组内调剂\n- 建议配置API Key以获取个性化政策解读',
+      'engineering-analyst': '离线模式下无法进行实时分析。\n\n工科方向速览（针对物理50分）：\n- **推荐**：电子信息类、自动化类、测控技术与仪器\n- **中性**：电气工程及其自动化（电网方向可冲）\n- **谨慎**：机械设计制造（物理要求高）\n- **避开**：热能与动力工程、土木工程',
+      'data-calculator': '离线模式，数据测算需要联网。\n\n基于您489分/76054位次的推算：\n| 梯队 | 位次区间 | 院校数 |\n|------|---------|-------|\n| 冲刺 | 64054-74054 | 约4-6所 |\n| 稳妥 | 74054-84054 | 约8-12所 |\n| 保底 | 84054-101054 | 约6-10所 |\n\n配置API Key获取精确测算。'
+    };
+    return responses[roleId] || responses['zhangxuefeng'];
+  }
+
+  function getSimulatedResponseForRole(roleId) {
+    return getSimulatedResponse(roleId);
+  }
+
+  function saveCurrentMessages() {
+    var msgs = getActiveMessages();
+    if (window.ConversationStore) {
+      window.ConversationStore.saveMessages(activeRole, msgs);
+    }
+    currentMessages[activeRole] = msgs;
+  }
+
+  // ==================== Input Handling ====================
+  function handleInputKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('chatInput');
+    input.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+    });
+  });
+
+  // ==================== Clear Chat ====================
+  function clearCurrentChat() {
+    if (!confirm('确定要清空当前角色的对话历史吗？')) return;
+    currentMessages[activeRole] = [];
+    if (window.ConversationStore) {
+      window.ConversationStore.clearMessages(activeRole);
+    }
+    renderMessages();
+    showToast('对话历史已清空', 'info');
+  }
+
+  // ==================== Settings Modal ====================
+  function openSettings() {
+    document.getElementById('settingsOverlay').classList.remove('hidden');
+    var encoded = localStorage.getItem('gx_deepseek_api_key');
+    if (encoded) document.getElementById('apiKeyInput').value = atob(encoded);
+  }
+  function closeSettings() {
+    document.getElementById('settingsOverlay').classList.add('hidden');
+  }
+  function closeSettingsOutside(e) {
+    if (e.target === document.getElementById('settingsOverlay')) closeSettings();
+  }
+  function saveSettings() {
+    var key = document.getElementById('apiKeyInput').value.trim();
+    if (key) {
+      localStorage.setItem('gx_deepseek_api_key', btoa(key));
+      showToast('API Key 已保存', 'success');
+    } else {
+      localStorage.removeItem('gx_deepseek_api_key');
+      showToast('API Key 已清除', 'info');
+    }
+    closeSettings();
+  }
+
+  // ==================== Init ====================
+  (function init() {
+    var profile = getProfile();
+    if (!profile) {
+      showToast('请先在首页填写考生信息', 'warning');
+      // Don't redirect immediately, allow user to configure
+    }
+
+    updateProfileFloat();
+
+    // Restore active role from localStorage
+    var savedRole = localStorage.getItem('gx_active_role') || 'zhangxuefeng';
+    if (savedRole && ROLES[savedRole]) {
+      activeRole = savedRole;
+    }
+
+    // Load all conversations
+    var roleIds = Object.keys(ROLES);
+    roleIds.forEach(function(rid) {
+      if (window.ConversationStore) {
+        currentMessages[rid] = window.ConversationStore.loadMessages(rid) || [];
+      } else {
+        currentMessages[rid] = [];
+      }
+    });
+
+    // Highlight active role button
+    document.querySelectorAll('.role-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.role === activeRole);
+    });
+
+    var r = ROLES[activeRole] || ROLES['zhangxuefeng'];
+    document.getElementById('welcomeIcon').textContent = r.emoji;
+    document.getElementById('welcomeTitle').textContent = r.welcome;
+    document.getElementById('welcomeDesc').textContent = r.welcomeDesc;
+
+    renderMessages();
+  })();
+  </script>
+</body>
+</html>

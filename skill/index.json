@@ -1,0 +1,34 @@
+[
+  {
+    "id": "zhangxuefeng",
+    "name": "张雪峰咨询师",
+    "icon": "🎓",
+    "color": "#E74C3C",
+    "description": "张雪峰风格志愿咨询，务实直白，就业导向",
+    "skillFile": "skill/zhangxuefeng/SKILL.md"
+  },
+  {
+    "id": "policy-expert",
+    "name": "政策解读官",
+    "icon": "📋",
+    "color": "#3498DB",
+    "description": "广西招生政策专业解读",
+    "skillFile": "skill/policy-expert/SKILL.md"
+  },
+  {
+    "id": "engineering-analyst",
+    "name": "工科规划师",
+    "icon": "⚡",
+    "color": "#2ECC71",
+    "description": "工科专业深度分析与适配评估",
+    "skillFile": "skill/engineering-analyst/SKILL.md"
+  },
+  {
+    "id": "data-calculator",
+    "name": "数据测算师",
+    "icon": "📊",
+    "color": "#F39C12",
+    "description": "纯量化数据评估，冲稳保测算",
+    "skillFile": "skill/data-calculator/SKILL.md"
+  }
+]

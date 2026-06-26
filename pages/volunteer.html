@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="冲稳保志愿推荐 - 广西高考志愿填报智能分析">
+  <title>志愿推荐 - 广西2026高考志愿填报助手</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .profile-summary {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px;
+      padding: 12px 0;
+    }
+    .ps-item { text-align: center; }
+    .ps-item .ps-val { font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--primary); }
+    .ps-item .ps-label { font-size: var(--font-size-xs); color: var(--text-muted); }
+    .tier-section { margin-bottom: 20px; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .tier-title {
+      display: flex; align-items: center; gap: 8px; padding: 12px 16px;
+      font-weight: var(--font-weight-bold); font-size: var(--font-size-md); color: #fff;
+    }
+    .tier-title.chong { background: #E74C3C; }
+    .tier-title.wen { background: #F39C12; }
+    .tier-title.bao { background: #2ECC71; }
+    .tier-title .tier-count { font-size: var(--font-size-sm); opacity: 0.85; font-weight: var(--font-weight-normal); }
+    .tier-table-wrap { background: var(--card-bg); border: 1px solid var(--border-light); border-top: none; overflow-x: auto; }
+    .tier-table-wrap table { width: 100%; border-collapse: collapse; min-width: 750px; }
+    .tier-table-wrap th { background: var(--bg-secondary); padding: 10px 12px; font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); text-align: left; border-bottom: 2px solid var(--border); white-space: nowrap; }
+    .tier-table-wrap td { padding: 10px 12px; font-size: var(--font-size-sm); border-bottom: 1px solid var(--divider); vertical-align: top; }
+    .tier-table-wrap tr:last-child td { border-bottom: none; }
+    .tier-table-wrap tr:hover td { background: var(--primary-lighter); cursor: pointer; }
+    .school-name { font-weight: var(--font-weight-semibold); color: var(--text-primary); }
+    .school-loc { color: var(--text-muted); font-size: var(--font-size-xs); }
+    .major-tag { display: inline-block; padding: 2px 8px; margin: 2px 3px 2px 0; border-radius: var(--radius-full); font-size: var(--font-size-xs); background: var(--primary-light); color: var(--primary-dark); white-space: nowrap; }
+    .risk-cell { min-width: 120px; }
+    .risk-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .risk-bar-wrap .risk-bar { flex: 1; height: 6px; background: var(--bg); border-radius: var(--radius-full); overflow: hidden; }
+    .risk-bar-wrap .risk-fill { height: 100%; border-radius: var(--radius-full); transition: width 0.5s ease; }
+    .risk-fill.high { background: #E74C3C; }
+    .risk-fill.mid { background: #F39C12; }
+    .risk-fill.low { background: #2ECC71; }
+    .risk-bar-wrap .risk-pct { font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); min-width: 32px; text-align: right; }
+    .slip-badge {
+      display: inline-block; padding: 6px 16px; border-radius: var(--radius-full);
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold);
+    }
+    .slip-badge.safe { background: var(--success-light); color: var(--success); }
+    .slip-badge.warn { background: var(--warning-light); color: var(--warning); }
+    .slip-badge.danger { background: var(--danger-light); color: var(--danger); }
+    .policy-notice { background: var(--accent-light); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 16px; }
+    .policy-notice h4 { color: var(--accent-dark); margin-bottom: 4px; font-size: var(--font-size-sm); }
+    .policy-notice p { font-size: var(--font-size-sm); color: var(--text-primary); margin-bottom: 0; }
+    .chart-box { background: var(--card-bg); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); padding: 20px; margin-top: 16px; display: none; }
+    .chart-box.show { display: block; animation: fadeIn 0.3s ease; }
+    .chart-box h4 { margin-bottom: 12px; font-size: var(--font-size-base); color: var(--text-primary); }
+    .chart-box canvas { max-height: 280px; width: 100%; }
+    .export-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    @media (max-width: 768px) {
+      .profile-summary { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <button class="btn-icon" onclick="window.location.href='../index.html'" title="返回"><i class="fa-solid fa-arrow-left"></i></button>
+      <span class="header-title"><i class="fa-solid fa-table-list"></i> 志愿推荐</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-icon" onclick="openSettings()" title="设置"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </header>
+
+  <main class="app-content">
+
+    <!-- Profile Summary -->
+    <div class="card card-compact" id="profileCard">
+      <div class="card-header">
+        <span class="card-title"><i class="fa-solid fa-id-card"></i> 考生信息摘要</span>
+        <button class="btn btn-sm btn-outline" onclick="recalculate()"><i class="fa-solid fa-rotate"></i> 重新计算</button>
+      </div>
+      <div class="card-body">
+        <div class="profile-summary" id="profileSummary"></div>
+        <div class="divider"></div>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span style="font-weight:600;">整体滑档概率：</span>
+          <span class="slip-badge safe" id="slipBadge">--</span>
+          <span style="font-size:var(--font-size-xs); color:var(--text-muted);" id="slipNote"></span>
+        </div>
+        <div class="export-bar">
+          <button class="btn btn-sm btn-outline" onclick="exportMarkdown()"><i class="fa-brands fa-markdown"></i> 导出Markdown</button>
+          <button class="btn btn-sm btn-outline" onclick="exportExcelText()"><i class="fa-solid fa-file-excel"></i> 导出Excel文本</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Local Policy Notice -->
+    <div class="policy-notice hidden" id="policyNotice">
+      <h4><i class="fa-solid fa-certificate"></i> 地方专项计划资格</h4>
+      <p>您具备玉林博白县户籍，可报考广西地方专项计划，部分院校可降分10-20分录取。注意：报考时需在志愿中明确选择地方专项批次。</p>
+    </div>
+
+    <!-- Results Container -->
+    <div id="resultsContainer">
+      <div class="empty-state" id="loadingState">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <div class="spinner-text">正在计算志愿推荐...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Container -->
+    <div class="chart-box" id="chartBox">
+      <h4 id="chartTitle">位次波动图</h4>
+      <canvas id="rankChartCanvas"></canvas>
+    </div>
+
+  </main>
+
+  <!-- Settings Modal -->
+  <div id="settingsOverlay" class="modal-overlay hidden" onclick="closeSettingsOutside(event)">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <span class="modal-title"><i class="fa-solid fa-gear"></i> 设置</span>
+        <button class="modal-close" onclick="closeSettings()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">DeepSeek API Key</label>
+          <input type="password" id="apiKeyInput" class="form-input" placeholder="sk-...">
+          <span class="form-hint">获取地址：<a href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeSettings()">取消</button>
+        <button class="btn btn-primary" onclick="saveSettings()">保存设置</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../config.js"></script>
+  <script src="../src/data-engine/score-rank-convert.js"></script>
+  <script src="../src/data-engine/data-filter.js"></script>
+  <script src="../src/data-engine/rank-cache.js"></script>
+  <script src="../src/guangxi/weight-adjust.js"></script>
+  <script src="../src/guangxi/risk-assessment.js"></script>
+  <script src="../src/guangxi/chong-wen-bao.js"></script>
+  <script src="../src/agent/conversation-store.js"></script>
+  <script src="../src/agent/deepseek-api.js"></script>
+  <script src="../src/agent/role-manager.js"></script>
+  <script src="../src/api/data-fetcher.js"></script>
+  <script src="../src/api/network-status.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <script>
+  // ==================== Toast ====================
+  function showToast(msg, type) {
+    var container = document.querySelector('.toast-container');
+    if (!container) { container = document.createElement('div'); container.className = 'toast-container'; document.body.appendChild(container); }
+    var toast = document.createElement('div');
+    toast.className = 'toast toast-' + (type || 'info');
+    var icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-exclamation' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+    toast.innerHTML = '<span class="toast-icon"><i class="fa-solid ' + icon + '"></i></span><div class="toast-body"><div class="toast-message">' + msg + '</div></div>';
+    container.appendChild(toast);
+    setTimeout(function() { toast.classList.add('removing'); setTimeout(function() { toast.remove(); if (container.children.length === 0) container.remove(); }, 300); }, 3000);
+  }
+
+  // ==================== Data ====================
+  var volunteerResults = null;
+  var chartInstance = null;
+
+  function getProfile() {
+    try { return JSON.parse(localStorage.getItem('gx_student_profile')); } catch(e) { return null; }
+  }
+
+  function getSchoolsData() {
+    // Try from cache first
+    if (window.RankCache && window.RankCache.getCachedData) {
+      var cached = window.RankCache.getCachedData('schools');
+      if (cached && cached.length > 0) return cached;
+    }
+    // Fallback: sample data
+    return generateSampleSchools();
+  }
+
+  // Generate sample school data for demo/offline
+  function generateSampleSchools() {
+    var baseSchools = [
+      { name: '桂林电子科技大学', province: '广西', city: '桂林', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 4600,
+        avgRank: 62000, avgScore: 510, historyRanks: [61000, 62500, 63800], historyScores: [508, 512, 510],
+        majors: [{category:'电子信息类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'},
+                 {category:'电气类',isWeakCurrent:false,isHeavyMachinery:false,suitedForGirls:false,physicsDependency:'中高'}],
+        website: 'https://www.guet.edu.cn/' },
+      { name: '广西科技大学', province: '广西', city: '柳州', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 4200,
+        avgRank: 68000, avgScore: 500, historyRanks: [67000, 68500, 69000], historyScores: [498, 502, 500],
+        majors: [{category:'机械类',isWeakCurrent:false,isHeavyMachinery:true,suitedForGirls:false,physicsDependency:'高'},
+                 {category:'自动化类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'}],
+        website: 'https://www.gxust.edu.cn/' },
+      { name: '桂林理工大学', province: '广西', city: '桂林', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 4400,
+        avgRank: 71000, avgScore: 495, historyRanks: [70000, 71500, 72000], historyScores: [492, 497, 495],
+        majors: [{category:'电子信息类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'},
+                 {category:'仪器类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'低'}],
+        website: 'https://www.glut.edu.cn/' },
+      { name: '广西民族大学', province: '广西', city: '南宁', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 4000,
+        avgRank: 76000, avgScore: 483, historyRanks: [75000, 76500, 77000], historyScores: [480, 485, 483],
+        majors: [{category:'电子信息类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'}],
+        website: 'https://www.gxmzu.edu.cn/' },
+      { name: '南宁师范大学', province: '广西', city: '南宁', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 3800,
+        avgRank: 78000, avgScore: 480, historyRanks: [77000, 78500, 79000], historyScores: [478, 481, 480],
+        majors: [{category:'自动化类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'}],
+        website: 'https://www.nnnu.edu.cn/' },
+      { name: '玉林师范学院', province: '广西', city: '玉林', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: true, tuition: 3600,
+        avgRank: 82000, avgScore: 470, historyRanks: [81000, 82500, 83000], historyScores: [468, 472, 470],
+        majors: [{category:'电气类',isWeakCurrent:false,isHeavyMachinery:false,suitedForGirls:false,physicsDependency:'中高'}],
+        website: 'https://www.ylu.edu.cn/' },
+      { name: '北部湾大学', province: '广西', city: '钦州', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 4000,
+        avgRank: 85000, avgScore: 465, historyRanks: [84000, 85500, 86000], historyScores: [463, 467, 465],
+        majors: [{category:'机械类',isWeakCurrent:false,isHeavyMachinery:false,suitedForGirls:false,physicsDependency:'中'}],
+        website: 'https://www.bbgu.edu.cn/' },
+      { name: '梧州学院', province: '广西', city: '梧州', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 3600,
+        avgRank: 88000, avgScore: 458, historyRanks: [87000, 88500, 89000], historyScores: [455, 460, 458],
+        majors: [{category:'电子信息类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'}],
+        website: 'https://www.gxuwz.edu.cn/' },
+      { name: '贺州学院', province: '广西', city: '贺州', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 3500,
+        avgRank: 92000, avgScore: 450, historyRanks: [91000, 92500, 93000], historyScores: [448, 452, 450],
+        majors: [{category:'自动化类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中低'}],
+        website: 'https://www.hzu.edu.cn/' },
+      { name: '百色学院', province: '广西', city: '百色', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: false, tuition: 3400,
+        avgRank: 95000, avgScore: 443, historyRanks: [94000, 95500, 96000], historyScores: [441, 445, 443],
+        majors: [{category:'电子信息类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'低'}],
+        website: 'https://www.bsuc.edu.cn/' },
+      { name: '广东石油化工学院', province: '广东', city: '茂名', isPublic: 1, isGuangxiLocal: false, hasLocalPolicy: false, tuition: 5200,
+        avgRank: 67000, avgScore: 502, historyRanks: [66000, 67500, 68000], historyScores: [500, 504, 502],
+        majors: [{category:'电气类',isWeakCurrent:false,isHeavyMachinery:false,suitedForGirls:false,physicsDependency:'中高'}],
+        website: 'https://www.gdupt.edu.cn/' },
+      { name: '湖南工学院', province: '湖南', city: '衡阳', isPublic: 1, isGuangxiLocal: false, hasLocalPolicy: false, tuition: 4800,
+        avgRank: 74000, avgScore: 490, historyRanks: [73000, 74500, 75000], historyScores: [488, 492, 490],
+        majors: [{category:'自动化类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中'}],
+        website: 'https://www.hnit.edu.cn/' },
+      { name: '贵州理工学院', province: '贵州', city: '贵阳', isPublic: 1, isGuangxiLocal: false, hasLocalPolicy: false, tuition: 4200,
+        avgRank: 80000, avgScore: 475, historyRanks: [79000, 80500, 81000], historyScores: [473, 477, 475],
+        majors: [{category:'机械类',isWeakCurrent:false,isHeavyMachinery:true,suitedForGirls:false,physicsDependency:'高'}],
+        website: 'https://www.git.edu.cn/' },
+      { name: '贺州学院(地方专项)', province: '广西', city: '贺州', isPublic: 1, isGuangxiLocal: true, hasLocalPolicy: true, tuition: 3500,
+        avgRank: 98000, avgScore: 440, historyRanks: [97000, 98500, 99000], historyScores: [438, 442, 440],
+        majors: [{category:'电子信息类',isWeakCurrent:true,isHeavyMachinery:false,suitedForGirls:true,physicsDependency:'中低'}],
+        website: 'https://www.hzu.edu.cn/' }
+    ];
+    return baseSchools;
+  }
+
+  // ==================== Algorithm ====================
+  function calculateVolunteers(profile) {
+    var rank = profile.rank || 0;
+    if (!rank) return null;
+
+    var schools = getSchoolsData();
+
+    // If ChongWenBao module is available, use it
+    if (window.ChongWenBao && window.ChongWenBao.calculateChongWenBao) {
+      try {
+        return window.ChongWenBao.calculateChongWenBao(rank, schools);
+      } catch(e) { console.warn('ChongWenBao error:', e); }
+    }
+
+    // Fallback manual calculation
+    var results = { '冲刺': [], '稳妥': [], '保底': [] };
+
+    schools.forEach(function(school) {
+      var delta = school.avgRank - rank;
+      var tier;
+      if (delta >= -12000 && delta <= -4000) tier = '冲刺';
+      else if (delta >= -4000 && delta <= 6000) tier = '稳妥';
+      else if (delta >= 6000 && delta <= 18000) tier = '保底';
+      else return;
+
+      var riskPercent = Math.round(Math.max(1, Math.min(99, (1 - delta / 30000) * 100)));
+
+      var entry = {
+        name: school.name,
+        province: school.province,
+        city: school.city,
+        isPublic: school.isPublic,
+        isGuangxiLocal: school.isGuangxiLocal,
+        hasLocalPolicy: school.hasLocalPolicy,
+        tuition: school.tuition,
+        avgRank: school.avgRank,
+        avgScore: school.avgScore,
+        historyRanks: school.historyRanks || [],
+        historyScores: school.historyScores || [],
+        majors: school.majors || [],
+        website: school.website || '',
+        tier: tier,
+        riskPercent: riskPercent,
+        recommendationReason: generateReason(school, tier),
+        disadvantages: generateDis(school, tier)
+      };
+
+      results[tier].push(entry);
+    });
+
+    // Sort and cap
+    results['冲刺'].sort(function(a,b) { return a.avgRank - b.avgRank; });
+    results['稳妥'].sort(function(a,b) { return a.riskPercent - b.riskPercent; });
+    results['保底'].sort(function(a,b) { return a.riskPercent - b.riskPercent; });
+
+    if (results['冲刺'].length > 6) results['冲刺'] = results['冲刺'].slice(0, 6);
+    if (results['稳妥'].length > 12) results['稳妥'] = results['稳妥'].slice(0, 12);
+
+    var total = results['冲刺'].length + results['稳妥'].length + results['保底'].length;
+    var slip = results['保底'].length >= 6 ? '<2%' : results['保底'].length >= 4 ? '3-5%' : results['保底'].length >= 2 ? '5-8%' : '>10%';
+
+    return {
+      '冲刺': results['冲刺'],
+      '稳妥': results['稳妥'],
+      '保底': results['保底'],
+      summary: { totalSchools: total, slipProbability: slip, studentRank: rank }
+    };
+  }
+
+  function generateReason(school, tier) {
+    var parts = [];
+    if (school.isGuangxiLocal) parts.push('广西区内公办，本地就业优势明显');
+    if (tier === '稳妥') parts.push('位次高度匹配，录取把握大');
+    if (tier === '保底') parts.push('常年录取位次靠后，兜底首选');
+    if (school.hasLocalPolicy) parts.push('地方专项计划可降分录取');
+    if (school.majors && school.majors.some(function(m) { return m.isWeakCurrent; })) parts.push('弱电专业适配女生/物理短板考生');
+    if (school.tuition <= 5000) parts.push('学费低廉，适合工薪家庭');
+    return parts.join('；') || '综合匹配度尚可';
+  }
+
+  function generateDis(school, tier) {
+    var parts = [];
+    if (tier === '冲刺') parts.push('录取风险较高，建议服从调剂');
+    if (!school.isGuangxiLocal) parts.push('外省院校，生活成本较高');
+    if (school.majors && school.majors.some(function(m) { return m.isHeavyMachinery; })) parts.push('含重型机械专业，物理要求高');
+    return parts.join('；') || '无明显劣势';
+  }
+
+  // ==================== Render ====================
+  function renderProfileSummary(profile) {
+    var container = document.getElementById('profileSummary');
+    container.innerHTML = [
+      { val: profile.totalScore + '分', label: '总分' },
+      { val: profile.rank ? profile.rank.toLocaleString() : '--', label: '省位次' },
+      { val: profile.level || '--', label: '分数区间' },
+      { val: (profile.above本科line != null) ? (profile.above本科线 >= 0 ? '+' + profile.above本科线 : profile.above本科线) + '分' : '--', label: '超本科线' },
+      { val: profile.birthPlace || '--', label: '生源地' },
+      { val: profile.gender || '--', label: '性别' }
+    ].map(function(item) {
+      return '<div class="ps-item"><div class="ps-val">' + item.val + '</div><div class="ps-label">' + item.label + '</div></div>';
+    }).join('');
+  }
+
+  function renderResults(results, profile) {
+    if (!results) {
+      document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-circle-exclamation"></i></div><div class="empty-state-text">无法计算志愿推荐</div><p class="empty-state-hint">请检查考生信息是否完整</p></div>';
+      return;
+    }
+
+    volunteerResults = results;
+
+    // Slip probability badge
+    var slip = results.summary.slipProbability;
+    var badgeEl = document.getElementById('slipBadge');
+    badgeEl.textContent = slip;
+
+    var slipClass = 'safe';
+    if (slip.indexOf('>10') >= 0) slipClass = 'danger';
+    else if (slip.indexOf('5-8') >= 0) slipClass = 'warn';
+    badgeEl.className = 'slip-badge ' + slipClass;
+
+    document.getElementById('slipNote').textContent = '共匹配 ' + results.summary.totalSchools + ' 所院校';
+
+    // Show local policy notice
+    var notice = document.getElementById('policyNotice');
+    if (profile && profile.hasLocalPolicy) {
+      notice.classList.remove('hidden');
+    } else {
+      notice.classList.add('hidden');
+    }
+
+    // Render tiers
+    var container = document.getElementById('resultsContainer');
+    var tiers = [
+      { key: '冲刺', cls: 'chong', icon: 'fa-arrow-up', desc: '录取难度较大，建议服从调剂' },
+      { key: '稳妥', cls: 'wen', icon: 'fa-equals', desc: '录取概率较高，位次匹配合理' },
+      { key: '保底', cls: 'bao', icon: 'fa-arrow-down', desc: '录取把握极大，兜底首选' }
+    ];
+
+    var html = '';
+    tiers.forEach(function(t) {
+      var schools = results[t.key] || [];
+      html += '<div class="tier-section">';
+      html += '<div class="tier-title ' + t.cls + '"><i class="fa-solid ' + t.icon + '"></i> ' + t.key + ' <span class="tier-count">（' + schools.length + '所 | ' + t.desc + '）</span></div>';
+      html += '<div class="tier-table-wrap"><table><thead><tr>';
+      html += '<th>院校名称</th><th>所在地</th><th>推荐专业</th><th>均位次</th><th>录取风险</th><th>推荐理由</th><th>注意事项</th>';
+      html += '</tr></thead><tbody>';
+
+      schools.forEach(function(s, idx) {
+        var majorTags = (s.majors || []).slice(0, 4).map(function(m) {
+          return '<span class="major-tag">' + m.category + '</span>';
+        }).join('');
+
+        var riskFillCls = s.riskPercent > 65 ? 'high' : s.riskPercent > 35 ? 'mid' : 'low';
+        var riskLabel = s.riskPercent > 65 ? '高' : s.riskPercent > 35 ? '中' : '低';
+
+        html += '<tr onclick="showSchoolChart(\'' + s.name.replace(/'/g, "\\'") + '\', ' + idx + ', \'' + t.key + '\')">';
+        html += '<td><div class="school-name">' + s.name + '</div></td>';
+        html += '<td><div class="school-loc">' + (s.province || '') + ' ' + (s.city || '') + '</div></td>';
+        html += '<td>' + majorTags + '</td>';
+        html += '<td style="text-align:center; font-weight:600;">' + (s.avgRank ? s.avgRank.toLocaleString() : '--') + '</td>';
+        html += '<td class="risk-cell">';
+        html += '<div class="risk-bar-wrap"><div class="risk-bar"><div class="risk-fill ' + riskFillCls + '" style="width:' + s.riskPercent + '%"></div></div><span class="risk-pct" style="color:' + (riskFillCls === 'high' ? '#E74C3C' : riskFillCls === 'mid' ? '#F39C12' : '#2ECC71') + '">' + s.riskPercent + '%</span></div>';
+        html += '<div style="font-size:11px;color:var(--text-muted)">风险：' + riskLabel + '</div>';
+        html += '</td>';
+        html += '<td style="font-size:var(--font-size-xs); max-width:180px;">' + (s.recommendationReason || '') + '</td>';
+        html += '<td style="font-size:var(--font-size-xs); max-width:180px;">' + (s.disadvantages || '') + '</td>';
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div></div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  function renderEmpty() {
+    document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-chart-bar"></i></div><div class="empty-state-text">暂无志愿推荐结果</div><p class="empty-state-hint">请确认考生信息已保存，然后点击"重新计算"</p></div>';
+  }
+
+  // ==================== Chart ====================
+  function showSchoolChart(schoolName, idx, tierKey) {
+    if (!volunteerResults) return;
+    var school = (volunteerResults[tierKey] || [])[idx];
+    if (!school) return;
+
+    var box = document.getElementById('chartBox');
+    box.classList.add('show');
+    document.getElementById('chartTitle').textContent = school.name + ' - 近三年位次波动';
+
+    var years = ['2023', '2024', '2025', '2026(预测)'];
+    var ranks = (school.historyRanks || []).slice(-3);
+    if (ranks.length < 3) {
+      while (ranks.length < 3) ranks.push(school.avgRank);
+    }
+    ranks.push(school.avgRank);
+
+    var studentRank = (volunteerResults.summary || {}).studentRank || 0;
+
+    var ctx = document.getElementById('rankChartCanvas').getContext('2d');
+    if (chartInstance) chartInstance.destroy();
+
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: years.slice(0, ranks.length),
+        datasets: [
+          {
+            label: '录取位次',
+            data: ranks.map(function(r) { return r; }),
+            backgroundColor: ranks.map(function(r) {
+              return r <= studentRank ? 'rgba(46, 204, 113, 0.6)' : 'rgba(231, 76, 60, 0.6)';
+            }),
+            borderColor: ranks.map(function(r) {
+              return r <= studentRank ? '#2ECC71' : '#E74C3C';
+            }),
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) { return '位次: ' + ctx.raw.toLocaleString(); }
+            }
+          },
+          annotation: studentRank > 0 ? {
+            annotations: {
+              studentLine: {
+                type: 'line',
+                yMin: studentRank,
+                yMax: studentRank,
+                borderColor: '#3498DB',
+                borderWidth: 2,
+                borderDash: [6, 3],
+                label: { display: true, content: '考生位次: ' + studentRank.toLocaleString(), position: 'end' }
+              }
+            }
+          } : {}
+        },
+        scales: {
+          y: {
+            reverse: true,
+            title: { display: true, text: '全省位次' },
+            ticks: { callback: function(v) { return v.toLocaleString(); } }
+          }
+        }
+      }
+    });
+
+    box.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ==================== Export ====================
+  function exportMarkdown() {
+    if (!volunteerResults) { showToast('暂无结果可导出', 'warning'); return; }
+    var profile = getProfile();
+    var md = '# 广西2026高考志愿推荐报告\n\n';
+    md += '## 考生信息\n';
+    if (profile) {
+      md += '- 总分：' + profile.totalScore + ' | 位次：' + (profile.rank ? profile.rank.toLocaleString() : '') + '\n';
+      md += '- 生源地：' + (profile.birthPlace || '') + ' | 选科：物理类\n';
+    }
+    md += '- 整体滑档概率：' + volunteerResults.summary.slipProbability + '\n\n';
+
+    var tiers = ['冲刺', '稳妥', '保底'];
+    tiers.forEach(function(t) {
+      var schools = volunteerResults[t] || [];
+      md += '## ' + t + ' (' + schools.length + '所)\n\n';
+      md += '| 院校 | 所在地 | 均位次 | 录取风险 | 推荐理由 |\n';
+      md += '|------|--------|--------|----------|----------|\n';
+      schools.forEach(function(s) {
+        md += '| ' + s.name + ' | ' + (s.province || '') + ' | ' + (s.avgRank ? s.avgRank.toLocaleString() : '') + ' | ' + s.riskPercent + '% | ' + (s.recommendationReason || '') + ' |\n';
+      });
+      md += '\n';
+    });
+
+    md += '---\n*本报告由广西2026高考志愿填报助手生成，仅供参考*\n';
+
+    downloadBlob(md, 'gaokao-volunteer-report.md', 'text/markdown');
+    showToast('Markdown报告已导出', 'success');
+  }
+
+  function exportExcelText() {
+    if (!volunteerResults) { showToast('暂无结果可导出', 'warning'); return; }
+    var lines = [];
+    lines.push('院校名称\t所在地\t梯队\t均位次\t录取风险\t推荐理由\t注意事项');
+    var tiers = ['冲刺', '稳妥', '保底'];
+    tiers.forEach(function(t) {
+      var schools = volunteerResults[t] || [];
+      schools.forEach(function(s) {
+        lines.push([
+          s.name,
+          (s.province || '') + ' ' + (s.city || ''),
+          t,
+          s.avgRank ? s.avgRank.toLocaleString() : '',
+          s.riskPercent + '%',
+          s.recommendationReason || '',
+          s.disadvantages || ''
+        ].join('\t'));
+      });
+    });
+
+    downloadBlob(lines.join('\n'), 'gaokao-volunteer-report.txt', 'text/plain;charset=utf-8');
+    showToast('Excel文本已导出（可用Excel打开）', 'success');
+  }
+
+  function downloadBlob(content, filename, mimeType) {
+    var blob = new Blob(['﻿' + content], { type: mimeType });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+  }
+
+  // ==================== Actions ====================
+  function recalculate() {
+    var profile = getProfile();
+    if (!profile) { showToast('请先在首页填写考生信息', 'warning'); return; }
+
+    document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="spinner-container"><div class="spinner"></div><div class="spinner-text">正在重新计算...</div></div></div>';
+    document.getElementById('chartBox').classList.remove('show');
+    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
+
+    renderProfileSummary(profile);
+
+    setTimeout(function() {
+      var results = calculateVolunteers(profile);
+      renderResults(results, profile);
+      if (!results || results.summary.totalSchools === 0) {
+        showToast('未匹配到院校，请检查数据', 'warning');
+      }
+    }, 300);
+  }
+
+  // ==================== Settings ====================
+  function openSettings() { document.getElementById('settingsOverlay').classList.remove('hidden'); loadApiKey(); }
+  function closeSettings() { document.getElementById('settingsOverlay').classList.add('hidden'); }
+  function closeSettingsOutside(e) { if (e.target === document.getElementById('settingsOverlay')) closeSettings(); }
+  function loadApiKey() { var enc = localStorage.getItem('gx_deepseek_api_key'); if (enc) document.getElementById('apiKeyInput').value = atob(enc); }
+  function saveSettings() {
+    var key = document.getElementById('apiKeyInput').value.trim();
+    if (key) { localStorage.setItem('gx_deepseek_api_key', btoa(key)); showToast('API Key 已保存', 'success'); }
+    else { localStorage.removeItem('gx_deepseek_api_key'); showToast('API Key 已清除', 'info'); }
+    closeSettings();
+  }
+
+  // ==================== Init ====================
+  document.addEventListener('DOMContentLoaded', function() {
+    var profile = getProfile();
+    if (profile) {
+      renderProfileSummary(profile);
+      // Auto-calculate on load
+      setTimeout(function() {
+        var results = calculateVolunteers(profile);
+        renderResults(results, profile);
+      }, 300);
+    } else {
+      renderProfileSummary({ totalScore:'--', rank:null, level:'--', above本科线:'--', birthPlace:'--', gender:'--' });
+      renderEmpty();
+      showToast('请先在首页填写并保存考生信息', 'info');
+    }
+    loadApiKey();
+  });
+  </script>
+</body>
+</html>
