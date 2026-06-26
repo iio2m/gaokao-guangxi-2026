@@ -40,35 +40,31 @@ window.GX_CONFIG = {
     ]
   },
   "chongWenBao": {
+    "totalSlots": 40,
+    "description": "广西本科普通批可填40个院校志愿，以下为冲稳保建议分配",
     "冲刺": {
       "min": -12000,
       "max": -4000,
       "riskLabel": "冲刺",
-      "riskRange": [
-        65,
-        85
-      ],
-      "maxCount": 6
+      "riskRange": [65, 85],
+      "maxCount": 10,
+      "suggestedCount": "6-10所"
     },
     "稳妥": {
       "min": -4000,
       "max": 6000,
       "riskLabel": "稳妥",
-      "riskRange": [
-        20,
-        60
-      ],
-      "maxCount": 15
+      "riskRange": [20, 60],
+      "maxCount": 25,
+      "suggestedCount": "20-25所"
     },
     "保底": {
       "min": 6000,
       "max": 18000,
       "riskLabel": "保底",
-      "riskRange": [
-        0,
-        20
-      ],
-      "minCount": 6
+      "riskRange": [0, 20],
+      "minCount": 8,
+      "suggestedCount": "8-10所"
     },
     "guangxiWeight": 3000,
     "weakCurrentBonus": 1500,
