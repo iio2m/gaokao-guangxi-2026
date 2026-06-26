@@ -156,7 +156,8 @@
   <script src="../src/agent/role-manager.js"></script>
   <script src="../src/api/data-fetcher.js"></script>
   <script src="../src/api/network-status.js"></script>
-  <script src="../src/view/rank-chart.js"></script>`n  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="../src/view/rank-chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
   <script>
   // ==================== Toast ====================
@@ -434,8 +435,9 @@
     container.innerHTML = html;
   }
 
-  function renderEmpty() {
-    document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-chart-bar"></i></div><div class="empty-state-text">暂无志愿推荐结果</div><p class="empty-state-hint">请确认考生信息已保存，然后点击"重新计算"</p></div>';
+  function renderEmpty(msg) {
+    var m = msg || '请确认考生信息已保存，然后点击"重新计算"';
+    document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><i class="fa-solid fa-chart-bar"></i></div><div class="empty-state-text">暂无志愿推荐结果</div><p class="empty-state-hint">' + m + '</p></div>';
   }
 
   // ==================== Chart ====================
@@ -665,35 +667,40 @@
 
   // ==================== Init ====================
   document.addEventListener('DOMContentLoaded', function() {
-    // Start loading school data into cache
-    var cachedSchools = null;
-    if (window.RankCache && window.RankCache.initCache) {
-      window.RankCache.initCache().then(function() {
-        cachedSchools = window.RankCache.getCachedData('schools');
-        if (cachedSchools && cachedSchools.length > 0) {
-          // Re-run calculation with full data
-          var profile = getProfile();
-          if (profile) {
-            var results = calculateVolunteers(profile);
-            renderResults(results, profile);
-          }
-        }
-      });
-    }
-
     var profile = getProfile();
-    if (profile) {
-      renderProfileSummary(profile);
-      // Auto-calculate on load
-      setTimeout(function() {
-        var results = calculateVolunteers(profile);
-        renderResults(results, profile);
-      }, 300);
-    } else {
+    if (!profile) {
       renderProfileSummary({ totalScore:'--', rank:null, level:'--', above本科线:'--', birthPlace:'--', gender:'--' });
       renderEmpty();
       showToast('请先在首页填写并保存考生信息', 'info');
+      loadApiKey();
+      return;
     }
+
+    renderProfileSummary(profile);
+
+    // Load cache then calculate once
+    function doCalculate() {
+      var results = calculateVolunteers(profile);
+      if (results && results.summary && results.summary.totalSchools > 0) {
+        renderResults(results, profile);
+      } else {
+        renderEmpty('未匹配到院校，请确认数据已加载');
+      }
+    }
+
+    if (window.RankCache && window.RankCache.initCache) {
+      // Show loading
+      document.getElementById('resultsContainer').innerHTML = '<div class="empty-state"><div class="spinner-container"><div class="spinner"></div><div class="spinner-text">正在加载院校数据...</div></div></div>';
+      window.RankCache.initCache().then(function() {
+        doCalculate();
+      }).catch(function() {
+        doCalculate(); // Fallback
+      });
+    } else {
+      // No cache module, calculate immediately
+      setTimeout(doCalculate, 200);
+    }
+
     loadApiKey();
   });
   </script>

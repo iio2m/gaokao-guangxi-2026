@@ -165,12 +165,9 @@
     <!-- Main Chat Area -->
     <div class="chat-main">
       <!-- Floating Profile -->
-      <div class="profile-float" id="profileFloat">
-        <div class="pf-title"><i class="fa-solid fa-id-card"></i> 考生信息</div>
-        <div class="pf-row"><span>总分</span><span class="pf-val" id="pfScore">--</span></div>
-        <div class="pf-row"><span>位次</span><span class="pf-val" id="pfRank">--</span></div>
-        <div class="pf-row"><span>生源地</span><span class="pf-val" id="pfPlace">--</span></div>
-        <div class="pf-row" id="pfApiStatus"><span>AI模式</span><span class="pf-val" style="color:var(--warning);font-weight:bold">🟡 离线测算</span></div>
+      <div class="profile-float" id="profileFloat" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;">
+        <span style="font-weight:600;color:var(--primary);white-space:nowrap;"><i class="fa-solid fa-id-card"></i> 489分 | 76,054名 | 博白县</span>
+        <span id="pfApiStatus" style="white-space:nowrap;color:var(--warning);">🟡 离线</span>
       </div>
 
       <!-- Messages Container -->
@@ -277,10 +274,13 @@
   function updateProfileFloat() {
     var p = getProfile();
     var hasKey = !!getRawApiKey();
-    document.getElementById('pfScore').textContent = p ? p.totalScore + '分' : '未设置';
-    document.getElementById('pfRank').textContent = p ? (p.rank ? p.rank.toLocaleString() : '?') : '未设置';
-    document.getElementById('pfPlace').textContent = p ? p.birthPlace : '未设置';
-    document.getElementById('pfApiStatus').innerHTML = '<span>AI模式</span><span class="pf-val" style="color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + ';font-weight:bold">' + (hasKey ? '🟢 AI在线' : '🟡 离线测算') + '</span>';
+    var el = document.getElementById('profileFloat');
+    if (!el) return;
+    var score = p ? p.totalScore : '?';
+    var rank = p && p.rank ? p.rank.toLocaleString() : '?';
+    var place = p ? (p.birthPlace || '广西') : '?';
+    el.innerHTML = '<span style="font-weight:600;color:var(--primary);white-space:nowrap;"><i class="fa-solid fa-id-card"></i> ' + score + '分 | ' + rank + '名 | ' + place + '</span>' +
+      '<span style="white-space:nowrap;color:' + (hasKey ? 'var(--success)' : 'var(--warning)') + ';font-weight:bold">' + (hasKey ? '🟢 AI在线' : '🟡 离线') + '</span>';
   }
 
   // ==================== Role Switching ====================
