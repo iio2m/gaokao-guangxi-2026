@@ -437,7 +437,12 @@
     }
   }
 
-  function doSingleChat(userContent, profile) {
+  async function doSingleChat(userContent, profile) {
+    // Ensure school data cache is ready before building prompt
+    if (window.RankCache && window.RankCache.initCache) {
+      try { await window.RankCache.initCache(); } catch(e) {}
+    }
+
     // Build messages array for API
     var messages = [];
     var systemPrompt = '';
